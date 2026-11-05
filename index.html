@@ -1334,7 +1334,7 @@ function runWorkshopCode(runAutoTests) {
 }
 
 /* ==========================================================================
-   3. БЛОК «КУЗНИЦА GIT И GITHUB» С ВИЗУАЛЬНЫМ СИМУЛЯТОРОМ
+   3. БЛОК «КУЗНИЦА GIT И GITHUB» С ВИЗУАЛЬНЫМ СИМУЛЯТОРОМ И VS CODE
    ========================================================================== */
 var gitSimState = {
   initialized: false,
@@ -1349,33 +1349,182 @@ var gitSimState = {
   ]
 };
 
+/* Состояние интерактивного тренажёра боковой панели VS Code */
+var vscSimState = {
+  changes: ['index.html', 'script.js', 'style.css'],
+  staged: [],
+  commitMsg: 'Добавил огненного дракона',
+  unpushedCommits: 0,
+  synced: false,
+  history: []
+};
+
+var GIT_COMMANDS_CHEATSHEET = [
+  { cmd: 'git init', icon: '🪄', title: 'Включить машину времени', desc: 'Превращает обычную папку на компьютере в волшебный Git-проект. Делается 1 раз в самом начале.' },
+  { cmd: 'git clone https://github.com/hero/game.git', icon: '📥', title: 'Скачать проект с GitHub', desc: 'Копирует готовый проект с сайта GitHub к тебе на компьютер по ссылке.' },
+  { cmd: 'git status', icon: '📡', title: 'Включить радар файлов', desc: 'Показывает, какие файлы ты изменил, а какие уже лежат в коробке перед сохранением.' },
+  { cmd: 'git add index.html', icon: '📄', title: 'Положить 1 файл в коробку', desc: 'Берёт только один указанный файл и кладёт его на сцену (в коробку для сохранения).' },
+  { cmd: 'git add .', icon: '🛒', title: 'Положить ВСЕ файлы в коробку', desc: 'Точка через пробел означает «всё сразу»! Собирает все изменённые файлы папки перед сохранением.' },
+  { cmd: 'git commit -m "Новое сохранение"', icon: '📦', title: 'Запечатать точку сохранения', desc: 'Делает снимок твоей игры и приклеивает понятную подпись: что именно ты изменил.' },
+  { cmd: 'git log --oneline', icon: '📜', title: 'Открыть летопись сохранений', desc: 'Показывает список всех твоих прошлых сохранений (коммитов) и их секретные коды.' },
+  { cmd: 'git branch -M main', icon: '🛣️', title: 'Назвать главную дорогу main', desc: 'Переименовывает главную ветку проекта в привычное имя main.' },
+  { cmd: 'git remote add origin https://github.com/hero/kingdom.git', icon: '🕊️', title: 'Привязать адрес замка GitHub', desc: 'Говорит почтовому голубю адрес твоего хранилища на сайте GitHub (делается 1 раз для проекта).' },
+  { cmd: 'git push -u origin main', icon: '🚀', title: 'Первый запуск в облако', desc: 'В самый первый раз отправляет твои сохранения из ветки main в облако origin (на GitHub).' },
+  { cmd: 'git push', icon: '☁️', title: 'Отправить новые сохранения', desc: 'Быстро отправляет все свежие коммиты с компьютера на сайт GitHub.' },
+  { cmd: 'git pull', icon: '⬇️', title: 'Забрать новости с облака', desc: 'Скачивает свежие изменения с сайта GitHub на компьютер (если ты правил код с другого ПК или с другом).' }
+];
+
 function renderGitModule() {
   updateHeaderStats();
-  setMascot('В <b>Кузнице Git и GitHub</b> ты научишься делать «сохранения» своего кода, как в компьютерной игре, и отправлять сайт в интернет! Попробуй нажимать кнопки команд внизу.');
+  setMascot('В <b>Кузнице Git и GitHub</b> я расскажу простыми словами, как войти в свой аккаунт, как сохранять код в <b>VS Code</b> всего <b>в 3 клика мышкой без команд</b> и как пользоваться терминалом как настоящий профи!');
 
-  var html = '<div class="k-card mb-4">' +
-    '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300">Управление версиями</span>' +
+  var recipeFirst = 'git init\ngit add .\ngit commit -m "Первое сохранение проекта"\ngit branch -M main\ngit remote add origin https://github.com/ТвойНик/название-проекта.git\ngit push -u origin main';
+  var recipeDaily = 'git add .\ngit commit -m "Добавил новый уровень игры"\ngit push';
+  var recipeBranch = 'git switch -c new-magic\n# ...экспериментируем с кодом...\ngit switch main\ngit merge new-magic';
+
+  var html =
+  /* ВВЕДЕНИЕ: МЕТАФОРА ИГРЫ */
+  '<div class="k-card mb-4">' +
+    '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300">Управление версиями · Простыми словами</span>' +
     '<h2 class="text-xl sm:text-2xl font-bold mt-1 mb-2">🐙 Кузница Git и Облачный Замок GitHub</h2>' +
     '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-3">' +
       '<div class="p-3.5 rounded-xl border" style="border-color:var(--line); background:rgba(217,138,22,0.06)">' +
-        '<h3 class="font-bold text-base mb-1">🕹️ Что такое Git? (Точки сохранения)</h3>' +
-        '<p>Представь, что ты проходишь сложную игру. Перед битвой с боссом ты делаешь <b>Save (сохранение)</b>. Если что-то пойдёт не так — всегда можно загрузить сохранение! <b>Git</b> — это программа на твоём компьютере, которая делает такие «точки сохранения» (они называются <b>коммитами — commits</b>) для твоего кода.</p>' +
+        '<h3 class="font-bold text-base mb-1">🕹️ Что такое Git? (Точки сохранения в игре)</h3>' +
+        '<p>Представь, что ты проходишь сложную компьютерную игру. Перед битвой с боссом ты нажимаешь <b>Save (Сохранить)</b>. Если герой проиграет — ты в один клик загрузишь сохранение! <b>Git</b> — это программа-помощник на твоём компьютере, которая делает такие «точки сохранения» (они называются <b>коммитами — commits</b>) для твоего кода.</p>' +
       '</div>' +
       '<div class="p-3.5 rounded-xl border" style="border-color:var(--line); background:rgba(36,130,82,0.06)">' +
-        '<h3 class="font-bold text-base mb-1">🏰 Что такое GitHub? (Облачный замок)</h3>' +
-        '<p><b>GitHub</b> — это сайт в интернете, где живут проекты программистов со всего мира. Туда ты отправляешь свои сохранения из Git, чтобы код никогда не потерялся, чтобы показывать проекты друзьям и бесплатно публиковать свои сайты через <b>GitHub Pages</b>!</p>' +
+        '<h3 class="font-bold text-base mb-1">🏰 Что такое GitHub? (Облачный замок в интернете)</h3>' +
+        '<p>Если компьютер сломается, сохранения на диске могут пропасть. Поэтому программисты отправляют их в <b>GitHub</b> — это огромный красивый замок в интернете, где живут проекты разработчиков со всего мира. Оттуда код никогда не потеряется, а ещё через <b>GitHub Pages</b> можно бесплатно превратить свой код в настоящий сайт и скинуть ссылку друзьям!</p>' +
       '</div>' +
     '</div>' +
-  '</div>';
+  '</div>' +
 
-  // Визуальный конвейер 4 зон Git
-  html += '<div class="k-card mb-4">' +
-    '<h3 class="font-bold text-base sm:text-lg mb-3">✨ Интерактивный тренажёр: проведи код от папки до GitHub!</h3>' +
+  /* ЧАСТЬ 1: КАК ВОЙТИ В АККАУНТ И ПОДРУЖИТЬ КОМПЬЮТЕР С GITHUB */
+  '<div class="k-card mb-4">' +
+    '<div class="flex items-center gap-2 mb-2">' +
+      '<span class="text-2xl">🔑</span>' +
+      '<h3 class="font-bold text-lg sm:text-xl">Часть 1. Как войти в аккаунт и подружить VS Code с GitHub</h3>' +
+    '</div>' +
+    '<p class="text-xs sm:text-sm mb-3" style="color:var(--mute)">Перед началом убедись, что на компьютере установлены две бесплатные программы: <b>Git</b> (с сайта <code>git-scm.com</code>) и редактор кода <b>Visual Studio Code</b>. Настройка делается всего один раз!</p>' +
+
+    '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">' +
+      /* Шаг 1 */
+      '<div class="p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line)">' +
+        '<div>' +
+          '<span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 mb-2">Шаг 1 · На сайте</span>' +
+          '<h4 class="font-bold text-base mb-1">🌐 Входим на сайт GitHub</h4>' +
+          '<ol class="list-decimal list-inside space-y-1.5" style="color:var(--mute)">' +
+            '<li>Открой в браузере сайт <b>github.com</b>.</li>' +
+            '<li>Нажми <b>Sign up</b> (если создаёшь новый аккаунт) или <b>Sign in</b> (если аккаунт уже есть).</li>' +
+            '<li>Введи свою почту, придумай пароль и никнейм героя, а затем введи секретный код из письма, которое придёт на почту.</li>' +
+          '</ol>' +
+        '</div>' +
+        '<div class="mt-3 p-2 rounded-lg bg-black/5 dark:bg-white/5 text-xs">💡 Запомни свой ник и почту — они понадобятся на следующем шаге!</div>' +
+      '</div>' +
+
+      /* Шаг 2 */
+      '<div class="p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line)">' +
+        '<div>' +
+          '<span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 mb-2">Шаг 2 · Знакомство (1 раз)</span>' +
+          '<h4 class="font-bold text-base mb-1">🤖 Представляемся роботу Git</h4>' +
+          '<p class="mb-2" style="color:var(--mute)">Чтобы Git подписывал твои сохранения твоим именем, открой терминал в VS Code (меню сверху <b>Terminal → New Terminal</b> или клавиши <code>Ctrl + ~</code>) и введи 2 команды со своим ником и почтой:</p>' +
+          '<pre class="p-2.5 rounded-lg bg-slate-900 text-amber-200 text-[11px] font-mono overflow-x-auto mb-2">git config --global user.name "ТвойНик"\ngit config --global user.email "почта@mail.ru"</pre>' +
+        '</div>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-3 w-full justify-center" onclick="copyText(\'git config --global user.name &quot;ТвойНик&quot;\\ngit config --global user.email &quot;почта@mail.ru&quot;\', \'команды знакомства\')">📋 Скопировать обе команды</button>' +
+      '</div>' +
+
+      /* Шаг 3 */
+      '<div class="p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line)">' +
+        '<div>' +
+          '<span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 mb-2">Шаг 3 · Магия без паролей</span>' +
+          '<h4 class="font-bold text-base mb-1">👤 Вход внутри VS Code</h4>' +
+          '<ol class="list-decimal list-inside space-y-1.5" style="color:var(--mute)">' +
+            '<li>В <b>левом нижнем углу</b> VS Code нажми на <b>иконку человечка в кружочке (Accounts)</b>.</li>' +
+            '<li>Нажми <b>Sign in with GitHub...</b> (Войти с помощью GitHub).</li>' +
+            '<li>Откроется браузер — нажми зелёную кнопку <b>Authorize Visual-Studio-Code</b> и разреши вернуться в редактор.</li>' +
+          '</ol>' +
+        '</div>' +
+        '<div class="mt-3 p-2 rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold text-xs">✅ Ура! Теперь VS Code сам узнаёт твой GitHub без ввода сложных паролей!</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  /* ЧАСТЬ 2: КАК РАБОТАТЬ В VS CODE ВООБЩЕ БЕЗ КОМАНД (КНОПКАМИ) + ИНТЕРАКТИВНЫЙ ТРЕНАЖЁР VS CODE */
+  '<div class="k-card mb-4">' +
+    '<div class="flex items-center gap-2 mb-2">' +
+      '<span class="text-2xl">🖱️</span>' +
+      '<h3 class="font-bold text-lg sm:text-xl">Часть 2. Как сохранять проект в VS Code кнопками (без единой команды!)</h3>' +
+    '</div>' +
+    '<p class="text-xs sm:text-sm mb-3" style="color:var(--mute)">Секрет: в Visual Studio Code есть специальная боковая панель с веточкой <b>Source Control</b> (третья иконка слева или клавиши <code>Ctrl + Shift + G</code>). В ней всё делается простыми кликами мышки!</p>' +
+
+    '<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">' +
+      /* Левая колонка: понятная инструкция */
+      '<div class="lg:col-span-6 space-y-3 text-xs sm:text-sm">' +
+        '<div class="p-3.5 rounded-xl border" style="border-color:var(--line); background:rgba(59,130,246,0.07)">' +
+          '<div class="font-bold text-sm sm:text-base mb-1">🚀 Как выложить проект в самый первый раз:</div>' +
+          '<ol class="list-decimal list-inside space-y-1" style="color:var(--mute)">' +
+            '<li>Открой свою папку с проектом в VS Code (<b>File → Open Folder</b>).</li>' +
+            '<li>Нажми слева на иконку <b>веточки с кружочками (Source Control)</b>.</li>' +
+            '<li>Нажми большую синюю кнопку <b>☁️ Publish to GitHub</b> (Опубликовать на GitHub).</li>' +
+            '<li>Сверху всплывёт выбор: <b>🔒 Private repository</b> (секретный — видишь только ты) или <b>🌐 Public repository</b> (открытый — видят друзья и учитель). Выбери нужный и нажми <b>OK</b>!</li>' +
+          '</ol>' +
+        '</div>' +
+
+        '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
+          '<div class="font-bold text-sm sm:text-base mb-2">⚡ Ежедневное сохранение в 3 клика (Попробуй на тренажёре справа 👉):</div>' +
+          '<div class="space-y-2">' +
+            '<div class="flex items-start gap-2.5">' +
+              '<span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-xs shrink-0">Клик 1: +</span>' +
+              '<div><b>Сложи в коробку (Stage):</b> Наведи мышку на изменённый файл в списке <i>Changes</i> и нажми плюсик <b><code>+</code></b>. Файл перепрыгнет в раздел <i>Staged Changes</i>.</div>' +
+            '</div>' +
+            '<div class="flex items-start gap-2.5">' +
+              '<span class="px-2 py-0.5 rounded bg-blue-500 text-white font-bold text-xs shrink-0">Клик 2: ✔ Commit</span>' +
+              '<div><b>Подпиши и запечатай:</b> В окошке <i>Message</i> напиши коротко, что ты сделал (например, <i>«Добавил дракона»</i>), и нажми синюю кнопку <b>✔ Commit</b>.</div>' +
+            '</div>' +
+            '<div class="flex items-start gap-2.5">' +
+              '<span class="px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-bold text-xs shrink-0">Клик 3: 🔄 Sync</span>' +
+              '<div><b>Отправь в облако:</b> Синяя кнопка сразу поменяет надпись на <b>🔄 Sync Changes</b>. Нажми её — и изменения улетят на сайт GitHub!</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="p-3 rounded-xl border text-xs" style="border-color:var(--line)">' +
+          '<div class="font-bold mb-1">🔮 Три полезные кнопки в меню <code>•••</code> (три точки вверху панели):</div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1.5">' +
+            '<div class="p-2 rounded bg-black/5 dark:bg-white/5"><b>⬇️ Pull (Стянуть)</b><br><span class="opacity-75">Скачать свежие изменения с сайта GitHub на ПК.</span></div>' +
+            '<div class="p-2 rounded bg-black/5 dark:bg-white/5"><b>⬆️ Push (Отправить)</b><br><span class="opacity-75">Отправить свои сохранения в облако.</span></div>' +
+            '<div class="p-2 rounded bg-black/5 dark:bg-white/5"><b>📥 Clone (Клон)</b><br><span class="opacity-75">Скачать весь проект по ссылке на новый компьютер.</span></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      /* Правая колонка: ИНТЕРАКТИВНЫЙ СИМУЛЯТОР БОКОВОЙ ПАНЕЛИ VS CODE */
+      '<div class="lg:col-span-6">' +
+        '<div class="rounded-2xl overflow-hidden border-2 shadow-xl" style="border-color:#3b82f6; background:#18181b; color:#e4e4e7">' +
+          '<div class="px-3.5 py-2 bg-[#27272a] border-b border-white/10 flex items-center justify-between text-xs">' +
+            '<div class="flex items-center gap-2 font-bold text-blue-400">' +
+              '<span>🌿 Тренажёр VS Code: Source Control</span>' +
+            '</div>' +
+            '<button class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[11px] text-zinc-200 transition" onclick="resetVscSim()">↺ Сбросить</button>' +
+          '</div>' +
+          '<div class="p-4" id="vsc-sim-container"></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  /* ЧАСТЬ 3: ИНТЕРАКТИВНЫЙ ТЕРМИНАЛ И 4 ЗОНЫ GIT */
+  '<div class="k-card mb-4">' +
+    '<div class="flex items-center gap-2 mb-1">' +
+      '<span class="text-2xl">💻</span>' +
+      '<h3 class="font-bold text-base sm:text-xl">Часть 3. Тренажёр терминала: проведи код через 4 зоны до GitHub!</h3>' +
+    '</div>' +
+    '<p class="text-xs sm:text-sm mb-3" style="color:var(--mute)">Настоящие маги кода умеют управлять Git не только кнопками, но и командами в терминале. Нажимай золотые кнопки по порядку (1 → 7) и смотри, как файлы путешествуют из рабочей папки в облако!</p>' +
+
     '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4" id="git-zones-view"></div>' +
 
-    // Быстрые кнопки команд по шагам
     '<div class="mb-3">' +
-      '<div class="text-xs font-bold mb-1.5">⚡ Нажимай команды по порядку или вводи их в терминал ниже:</div>' +
+      '<div class="text-xs font-bold mb-1.5">⚡ Нажимай команды по порядку или вводи любую команду из шпаргалки ниже:</div>' +
       '<div class="flex flex-wrap gap-1.5">' +
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git init\')">1. git init</button>' +
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git status\')">2. git status</button>' +
@@ -1384,11 +1533,11 @@ function renderGitModule() {
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git branch -M main\')">5. git branch -M main</button>' +
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git remote add origin https://github.com/hero/kingdom.git\')">6. git remote add</button>' +
         '<button class="k-btn green text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git push -u origin main\')">7. git push -u origin main</button>' +
-        '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="resetGitSim()">↺ Сбросить тренажёр</button>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git log --oneline\')">📜 git log --oneline</button>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="resetGitSim()">↺ Сбросить терминал</button>' +
       '</div>' +
     '</div>' +
 
-    // Терминал
     '<div class="rounded-xl overflow-hidden border-2" style="border-color:var(--line); background:var(--code)">' +
       '<div class="px-3 py-1.5 bg-black/40 text-xs text-slate-400 flex justify-between items-center font-mono">' +
         '<span>bash — ~/kingdom-project</span>' +
@@ -1397,33 +1546,235 @@ function renderGitModule() {
       '<pre id="git-terminal-out" class="p-3.5 text-xs sm:text-sm text-emerald-300 font-mono max-h-56 overflow-y-auto whitespace-pre-wrap"></pre>' +
       '<div class="flex items-center border-t border-white/10 px-3 py-2 bg-black/20">' +
         '<span class="text-amber-400 font-mono font-bold mr-2">$</span>' +
-        '<input id="git-cmd-input" type="text" class="flex-1 bg-transparent text-white font-mono text-sm outline-none" placeholder="Введи команду git (например, git status) и нажми Enter..." onkeydown="if(event.key===\'Enter\')submitGitInput()" />' +
+        '<input id="git-cmd-input" type="text" class="flex-1 bg-transparent text-white font-mono text-sm outline-none" placeholder="Введи команду git (например, git status или git log --oneline) и нажми Enter..." onkeydown="if(event.key===\'Enter\')submitGitInput()" />' +
         '<button class="k-btn text-xs !py-1 !px-3" onclick="submitGitInput()">Выполнить</button>' +
       '</div>' +
     '</div>' +
-  '</div>';
+  '</div>' +
 
-  // Шпаргалка для реальной жизни + GitHub Pages
-  html += '<div class="k-card">' +
-    '<h3 class="font-bold text-lg mb-2">📘 Пошаговая шпаргалка: как выложить свой сайт на GitHub Pages</h3>' +
+  /* ЧАСТЬ 4: ПОЛНАЯ ДЕТСКАЯ ШПАРГАЛКА ПО ВСЕМ КОМАНДАМ GIT + 3 ГОТОВЫХ РЕЦЕПТА */
+  '<div class="k-card mb-4">' +
+    '<div class="flex items-center gap-2 mb-2">' +
+      '<span class="text-2xl">📚</span>' +
+      '<h3 class="font-bold text-lg sm:text-xl">Часть 4. Большая книга заклинаний Git (Все команды простыми словами)</h3>' +
+    '</div>' +
+    '<p class="text-xs sm:text-sm mb-3" style="color:var(--mute)">Нажми на любую карточку команды, чтобы скопировать её в буфер обмена или протестировать в терминале выше!</p>' +
+
+    '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mb-5">' +
+      GIT_COMMANDS_CHEATSHEET.map(function(item) {
+        return '<div class="p-3 rounded-xl border flex flex-col justify-between transition hover:border-amber-500" style="border-color:var(--line)">' +
+          '<div>' +
+            '<div class="flex items-center justify-between gap-2 mb-1">' +
+              '<span class="font-bold text-xs sm:text-sm">' + item.icon + ' ' + esc(item.title) + '</span>' +
+            '</div>' +
+            '<code class="block p-1.5 rounded bg-slate-900 text-amber-300 text-xs font-mono mb-1.5 break-all">' + esc(item.cmd) + '</code>' +
+            '<p class="text-xs" style="color:var(--mute)">' + esc(item.desc) + '</p>' +
+          '</div>' +
+          '<div class="flex gap-1.5 mt-2.5 pt-2 border-t" style="border-color:var(--line)">' +
+            '<button class="k-btn ghost text-[11px] !py-1 !px-2 flex-1 justify-center" onclick="copyText(' + JSON.stringify(item.cmd) + ', \'команда\')">📋 Копировать</button>' +
+            '<button class="k-btn text-[11px] !py-1 !px-2 flex-1 justify-center" onclick="runGitCommand(' + JSON.stringify(item.cmd) + ')">▶ В тренажёр</button>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    /* 3 Готовых рецепта-сценария */
+    '<h4 class="font-bold text-base sm:text-lg mb-2.5">🧪 3 готовых рецепта-сценария на все случаи жизни:</h4>' +
+    '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">' +
+      '<div class="p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line); background:rgba(217,138,22,0.05)">' +
+        '<div>' +
+          '<span class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300">Сценарий А · Старт</span>' +
+          '<h5 class="font-bold text-sm mt-1.5 mb-1">🚀 Первая отправка проекта на GitHub</h5>' +
+          '<p class="text-xs mb-2" style="color:var(--mute)">Когда ты создал пустой репозиторий на сайте GitHub (кнопка <b>New</b>) и хочешь впервые отправить туда свою папку:</p>' +
+          '<pre class="p-2.5 rounded-lg bg-slate-900 text-emerald-300 text-[11px] font-mono overflow-x-auto mb-2">' + esc(recipeFirst) + '</pre>' +
+        '</div>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-3 w-full justify-center" onclick="copyText(' + JSON.stringify(recipeFirst) + ', \'Сценарий А\')">📋 Скопировать Сценарий А</button>' +
+      '</div>' +
+
+      '<div class="p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line); background:rgba(36,130,82,0.05)">' +
+        '<div>' +
+          '<span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">Сценарий Б · Каждый день</span>' +
+          '<h5 class="font-bold text-sm mt-1.5 mb-1">⚡ «Золотая тройка» (Обычное сохранение)</h5>' +
+          '<p class="text-xs mb-2" style="color:var(--mute)">Когда проект уже подключён к GitHub, для любого нового сохранения тебе нужны всего <b>3 короткие команды</b>:</p>' +
+          '<pre class="p-2.5 rounded-lg bg-slate-900 text-amber-200 text-xs font-mono overflow-x-auto mb-2">' + esc(recipeDaily) + '</pre>' +
+          '<p class="text-xs" style="color:var(--mute)">1) Собрали файлы → 2) Подписали сохранение → 3) Отправили в облако!</p>' +
+        '</div>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-3 w-full justify-center mt-2" onclick="copyText(' + JSON.stringify(recipeDaily) + ', \'Золотая тройка\')">📋 Скопировать Золотую тройку</button>' +
+      '</div>' +
+
+      '<div class="p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line); background:rgba(168,85,247,0.05)">' +
+        '<div>' +
+          '<span class="text-[11px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-700 dark:text-purple-300">Сценарий В · Суперсила</span>' +
+          '<h5 class="font-bold text-sm mt-1.5 mb-1">🌌 Ветки (Параллельная вселенная)</h5>' +
+          '<p class="text-xs mb-2" style="color:var(--mute)">Хочешь проверить безумную идею и боишься сломать работающую игру? Создай отдельную <b>ветку</b>, а если всё получится — соедини её с главной!</p>' +
+          '<pre class="p-2.5 rounded-lg bg-slate-900 text-purple-300 text-[11px] font-mono overflow-x-auto mb-2">' + esc(recipeBranch) + '</pre>' +
+        '</div>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-3 w-full justify-center" onclick="copyText(' + JSON.stringify(recipeBranch) + ', \'Команды веток\')">📋 Скопировать рецепт веток</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  /* ЧАСТЬ 5: КАК ВКЛЮЧИТЬ GITHUB PAGES */
+  '<div class="k-card">' +
+    '<h3 class="font-bold text-lg mb-2">🌍 Бонус: как превратить проект в настоящий сайт через GitHub Pages</h3>' +
     '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">' +
       '<div class="p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 1. Создай репозиторий</div>' +
-        'Зарегистрируйся на <b>github.com</b>, нажми зелёную кнопку <b>New</b> (Новый репозиторий), назови его, например, <code>my-first-game</code> и нажми <b>Create repository</b>.' +
+        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 1. Открой Settings</div>' +
+        'Зайди в свой репозиторий на сайте <b>github.com</b> и в верхнем меню нажми на шестерёнку <b>Settings</b> (Настройки).' +
       '</div>' +
       '<div class="p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 2. Отправь файлы</div>' +
-        'Выполни в терминале VS Code команды с нашего тренажёра (<code>git init</code> → <code>git add .</code> → <code>git commit</code> → <code>git push</code>), либо просто перетащи свой <code>index.html</code> через кнопку <b>Upload files</b> на сайте GitHub!' +
+        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 2. Выбери раздел Pages</div>' +
+        'В левом боковом меню нажми <b>Pages</b>. В выпадающем списке <b>Branch</b> вместо <i>None</i> выбери ветку <code>main</code> и нажми кнопку <b>Save</b>.' +
       '</div>' +
       '<div class="p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 3. Включи GitHub Pages</div>' +
-        'В репозитории зайди во вкладку <b>Settings → Pages</b>, в разделе <b>Branch</b> выбери ветку <code>main</code> и нажми <b>Save</b>. Через минуту твой сайт откроется по настоящей ссылке в интернете!' +
+        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 3. Поделись ссылкой!</div>' +
+        'Подожди 1 минуту и обнови страницу — сверху появится настоящая ссылка вида <code>https://твой-ник.github.io/проект/</code>, которую можно открыть даже с телефона!' +
       '</div>' +
     '</div>' +
   '</div>';
 
   $('app').innerHTML = html;
   updateGitSimView();
+  renderVscSimUI();
+}
+
+/* Функции интерактивного тренажёра боковой панели VS Code Source Control */
+function renderVscSimUI() {
+  var box = $('vsc-sim-container');
+  if (!box) return;
+
+  var totalChanges = vscSimState.changes.length + vscSimState.staged.length;
+
+  var stagedListHtml = vscSimState.staged.length
+    ? vscSimState.staged.map(function(f, idx) {
+        return '<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-xs font-mono">' +
+          '<span class="text-emerald-300">📄 ' + esc(f) + ' <i class="text-[10px] opacity-70">(в коробке)</i></span>' +
+          '<button class="px-2 py-0.5 rounded bg-zinc-700 hover:bg-zinc-600 text-white font-bold" title="Убрать из коробки" onclick="vscUnstageFile(' + idx + ')">−</button>' +
+        '</div>';
+      }).join('')
+    : '<div class="text-xs text-zinc-500 italic px-2 py-1">Пока пусто — нажми «+» рядом с файлом ниже!</div>';
+
+  var changesListHtml = vscSimState.changes.length
+    ? vscSimState.changes.map(function(f, idx) {
+        return '<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono">' +
+          '<span class="text-amber-300">📄 ' + esc(f) + ' <b class="text-amber-400 ml-1">M</b></span>' +
+          '<button class="px-2.5 py-0.5 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold" title="Положить в коробку (Stage)" onclick="vscStageFile(' + idx + ')">+ В коробку</button>' +
+        '</div>';
+      }).join('')
+    : '<div class="text-xs text-zinc-500 italic px-2 py-1">Все изменённые файлы уже сложены или сохранены!</div>';
+
+  var mainActionBtn = '';
+  if (vscSimState.unpushedCommits > 0) {
+    mainActionBtn = '<button class="w-full py-2 px-3 rounded-lg font-bold text-xs sm:text-sm bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition shadow flex items-center justify-center gap-2" onclick="vscSyncChanges()">' +
+      '🔄 Клик 3: Sync Changes (' + vscSimState.unpushedCommits + '↑ Отправить в GitHub)' +
+    '</button>';
+  } else {
+    mainActionBtn = '<button class="w-full py-2 px-3 rounded-lg font-bold text-xs sm:text-sm bg-blue-600 hover:bg-blue-500 text-white transition shadow flex items-center justify-center gap-2" onclick="vscCommitStaged()">' +
+      '✔ Клик 2: Commit (Запечатать сохранение)' +
+    '</button>';
+  }
+
+  var historyHtml = vscSimState.history.length
+    ? '<div class="mt-3 pt-2.5 border-t border-white/10 text-xs">' +
+        '<div class="font-bold text-zinc-400 mb-1">☁️ Отправлено на GitHub:</div>' +
+        vscSimState.history.map(function(h) {
+          return '<div class="text-emerald-400 font-mono text-[11px]">✔ ' + esc(h) + '</div>';
+        }).join('') +
+      '</div>'
+    : '';
+
+  box.innerHTML =
+    '<div class="flex items-center justify-between text-xs mb-2 text-zinc-400">' +
+      '<span>👤 Аккаунт: <b class="text-emerald-400">ГеройКода (GitHub ✔)</b></span>' +
+      '<span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-bold">Изменений: ' + totalChanges + '</span>' +
+    '</div>' +
+
+    '<div class="mb-2.5">' +
+      '<input id="vsc-msg-input" type="text" value="' + esc(vscSimState.commitMsg) + '" oninput="vscSimState.commitMsg=this.value" placeholder="Сообщение (что сделано в коде)..." class="w-full px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-700 text-white text-xs outline-none focus:border-blue-500 mb-2" />' +
+      mainActionBtn +
+    '</div>' +
+
+    '<div class="space-y-3 mt-3">' +
+      '<div>' +
+        '<div class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-1 flex justify-between">' +
+          '<span>📦 Staged Changes (В коробке: ' + vscSimState.staged.length + ')</span>' +
+        '</div>' +
+        '<div class="space-y-1">' + stagedListHtml + '</div>' +
+      '</div>' +
+
+      '<div>' +
+        '<div class="text-[11px] font-bold uppercase tracking-wider text-amber-400 mb-1 flex justify-between items-center">' +
+          '<span>📝 Changes (Изменённые файлы: ' + vscSimState.changes.length + ')</span>' +
+          (vscSimState.changes.length > 0 ? '<button class="text-[11px] text-amber-300 underline hover:text-amber-200" onclick="vscStageAll()">+ Добавить все</button>' : '') +
+        '</div>' +
+        '<div class="space-y-1">' + changesListHtml + '</div>' +
+      '</div>' +
+    '</div>' +
+    historyHtml;
+}
+
+function vscStageFile(idx) {
+  var file = vscSimState.changes.splice(idx, 1)[0];
+  if (file) vscSimState.staged.push(file);
+  renderVscSimUI();
+}
+
+function vscStageAll() {
+  while (vscSimState.changes.length > 0) {
+    vscSimState.staged.push(vscSimState.changes.shift());
+  }
+  renderVscSimUI();
+}
+
+function vscUnstageFile(idx) {
+  var file = vscSimState.staged.splice(idx, 1)[0];
+  if (file) vscSimState.changes.push(file);
+  renderVscSimUI();
+}
+
+function vscCommitStaged() {
+  if (vscSimState.staged.length === 0) {
+    toast('Сначала нажми «+ В коробку» рядом с файлом!', true);
+    return;
+  }
+  var msg = (vscSimState.commitMsg || '').trim();
+  if (!msg) {
+    toast('Напиши короткое сообщение в поле Message!', true);
+    return;
+  }
+  vscSimState.staged = [];
+  vscSimState.unpushedCommits += 1;
+  toast('📦 Коробка запечатана (Commit)! Теперь нажми зелёную кнопку Sync Changes!');
+  renderVscSimUI();
+}
+
+function vscSyncChanges() {
+  vscSimState.unpushedCommits = 0;
+  vscSimState.synced = true;
+  vscSimState.history.push('«' + vscSimState.commitMsg + '» — доставлено в облако GitHub!');
+  if (!state.gitSteps.vscSync) {
+    state.gitSteps.vscSync = 1;
+    addCoins(15, 'Ты освоил сохранение через VS Code в 3 клика!');
+  } else {
+    toast('☁️ Изменения синхронизированы с GitHub!');
+  }
+  if (vscSimState.changes.length === 0) {
+    vscSimState.changes = ['level2.js'];
+    vscSimState.commitMsg = 'Добавил второй уровень';
+  }
+  renderVscSimUI();
+}
+
+function resetVscSim() {
+  vscSimState = {
+    changes: ['index.html', 'script.js', 'style.css'],
+    staged: [],
+    commitMsg: 'Добавил огненного дракона',
+    unpushedCommits: 0,
+    synced: false,
+    history: []
+  };
+  renderVscSimUI();
 }
 
 function submitGitInput() {
@@ -1471,7 +1822,7 @@ function runGitCommand(rawCmd) {
     } else {
       gitSimState.staged = true;
       state.gitSteps.add = 1;
-      gitSimState.logs.push('🛒 Файлы index.html и script.js перенесены на Сцену (Staging Area)! Готовы к коммиту.');
+      gitSimState.logs.push('🛒 Файлы перенесены на Сцену (Staging Area)! Готовы к коммиту.');
     }
   } else if (/^git commit/.test(cmd)) {
     if (!gitSimState.staged) {
@@ -1485,11 +1836,39 @@ function runGitCommand(rawCmd) {
       state.gitSteps.commit = 1;
       gitSimState.logs.push('📦 [' + gitSimState.branch + ' ' + hash + '] ' + msg + '\n 2 files changed, 45 insertions(+)');
     }
+  } else if (/^git log/.test(cmd)) {
+    if (gitSimState.commits.length === 0) {
+      gitSimState.logs.push('📜 Летопись пока пуста — сделай свой первый коммит!');
+    } else {
+      var logLines = gitSimState.commits.map(function(c) {
+        return c.hash + ' (HEAD -> ' + gitSimState.branch + ') ' + c.msg;
+      }).join('\n');
+      gitSimState.logs.push('📜 Летопись коммитов:\n' + logLines);
+    }
   } else if (/^git branch -M (\w+)/.test(cmd)) {
     var bMatch = cmd.match(/^git branch -M (\w+)/);
     gitSimState.branch = bMatch[1];
     state.gitSteps.branch = 1;
     gitSimState.logs.push('🌿 Главная ветка переименована в "' + gitSimState.branch + '".');
+  } else if (/^git switch -c (\S+)/.test(cmd)) {
+    var swMatch = cmd.match(/^git switch -c (\S+)/);
+    gitSimState.branch = swMatch[1];
+    gitSimState.logs.push('🌌 Создана новая параллельная ветка "' + gitSimState.branch + '" и выполнен переход в неё!');
+  } else if (/^git switch (\S+)/.test(cmd)) {
+    var sw2 = cmd.match(/^git switch (\S+)/);
+    gitSimState.branch = sw2[1];
+    gitSimState.logs.push('🔀 Переключились на ветку "' + gitSimState.branch + '".');
+  } else if (/^git merge (\S+)/.test(cmd)) {
+    var mg = cmd.match(/^git merge (\S+)/);
+    gitSimState.logs.push('🤝 Ветка "' + mg[1] + '" успешно объединена с текущей веткой "' + gitSimState.branch + '"!');
+  } else if (/^git clone\s+(\S+)/.test(cmd)) {
+    var cl = cmd.match(/^git clone\s+(\S+)/);
+    gitSimState.initialized = true;
+    gitSimState.logs.push('📥 Клонирование из ' + cl[1] + '...\n✅ Проект успешно скачан на компьютер!');
+  } else if (/^git pull/.test(cmd)) {
+    gitSimState.logs.push('⬇️ Проверка обновлений на GitHub... Already up to date (у тебя самая свежая версия!).');
+  } else if (/^git config/.test(cmd)) {
+    gitSimState.logs.push('🪪 Настройка профиля Git успешно сохранена!');
   } else if (/^git remote add origin\s+(\S+)/.test(cmd)) {
     var rMatch = cmd.match(/^git remote add origin\s+(\S+)/);
     gitSimState.remoteUrl = rMatch[1];
@@ -1510,7 +1889,7 @@ function runGitCommand(rawCmd) {
       gitSimState.logs.push('🚀 Перечисление объектов: 100%... Готово!\n☁️ Все коммиты успешно доставлены в GitHub (' + gitSimState.remoteUrl + ')!');
     }
   } else {
-    gitSimState.logs.push('🤔 Команда не распознана тренажёром. Попробуй: git init, git status, git add ., git commit -m "Сейв", git push');
+    gitSimState.logs.push('🤔 Команда не распознана тренажёром. Попробуй: git init, git status, git add ., git commit -m "Сейв", git log --oneline, git push');
   }
 
   saveState();
