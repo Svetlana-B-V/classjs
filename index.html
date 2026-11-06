@@ -3,45 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Королевство JavaScript 2.0 — Интерактивный учебник и лаборатория</title>
+<title>Королевство JavaScript 2.0 — Сказочная Интерактивная Школа Кода</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f6ecd5;
-    --bg-accent: #efe0be;
-    --card: #fffaf0;
+    --bg-accent: #ebd5a7;
+    --card: rgba(255, 250, 240, 0.94);
     --ink: #2e2010;
-    --mute: #786246;
+    --mute: #755e42;
     --gold: #d98a16;
     --gold-light: #fef3c7;
-    --acc: #248252;
+    --acc: #1f8854;
     --acc-light: #d1fae5;
     --bad: #c93b2b;
     --bad-light: #fee2e2;
-    --code: #1e1b2e;
+    --magic: #7c3aed;
+    --magic-light: #ede9fe;
+    --code: #1b172a;
     --codeink: #f4eeff;
-    --line: #dec89a;
-    --shadow: 0 10px 25px -5px rgba(80, 50, 15, 0.12);
+    --line: #dec492;
+    --shadow: 0 12px 28px -6px rgba(80, 50, 15, 0.15);
   }
 
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #13111c;
-    --bg-accent: #1d192b;
-    --card: #211d33;
+    --bg: #110e1b;
+    --bg-accent: #1e1833;
+    --card: rgba(33, 28, 52, 0.94);
     --ink: #f5eedc;
-    --mute: #a89ec4;
+    --mute: #afa3cc;
     --gold: #f5b041;
     --gold-light: #3a2e18;
     --acc: #34d399;
     --acc-light: #13392c;
     --bad: #f87171;
     --bad-light: #3c1c21;
-    --code: #0d0b14;
+    --magic: #a78bfa;
+    --magic-light: #2a2048;
+    --code: #0c0914;
     --codeink: #f4eeff;
-    --line: #393256;
-    --shadow: 0 10px 28px -5px rgba(0, 0, 0, 0.45);
+    --line: #3b325c;
+    --shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.55);
   }
 
   * { box-sizing: border-box; }
@@ -52,10 +56,26 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.55;
     min-height: 100vh;
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.35s ease, color 0.35s ease;
+    overflow-x: hidden;
   }
 
-  h1, h2, h3, .font-title {
+  /* Волшебный фоновый холст со светлячками */
+  #fireflies-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app-shell {
+    position: relative;
+    z-index: 10;
+  }
+
+  h1, h2, h3, h4, .font-title {
     font-family: 'Comfortaa', cursive, sans-serif;
   }
 
@@ -65,11 +85,12 @@
 
   .k-card {
     background: var(--card);
+    backdrop-filter: blur(8px);
     border: 2px solid var(--line);
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 18px;
     box-shadow: var(--shadow);
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
 
   .k-loc {
@@ -78,8 +99,9 @@
     overflow: hidden;
   }
   .k-loc:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px) scale(1.01);
     border-color: var(--gold);
+    box-shadow: 0 16px 32px -6px rgba(217, 138, 22, 0.25);
   }
   .k-loc.done {
     border-color: var(--acc);
@@ -89,65 +111,102 @@
     font-family: inherit;
     cursor: pointer;
     border: 2px solid var(--gold);
-    background: linear-gradient(180deg, #f7b749 0%, var(--gold) 100%);
+    background: linear-gradient(180deg, #f9c45c 0%, var(--gold) 100%);
     color: #261704;
-    border-radius: 12px;
+    border-radius: 13px;
     padding: 9px 16px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.12s ease, filter 0.15s ease, opacity 0.15s;
-    box-shadow: 0 3px 0 rgba(0,0,0,0.18);
+    transition: transform 0.14s ease, filter 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+    box-shadow: 0 4px 0 rgba(120, 70, 5, 0.28);
+    user-select: none;
   }
   .k-btn:hover:not(:disabled) {
-    filter: brightness(1.06);
-    transform: translateY(-1px);
+    filter: brightness(1.07);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(120, 70, 5, 0.28);
   }
   .k-btn:active:not(:disabled) {
-    transform: translateY(1px);
-    box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(120, 70, 5, 0.28);
   }
   .k-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
   .k-btn.ghost {
-    background: transparent;
+    background: rgba(217, 138, 22, 0.06);
     color: var(--ink);
     border-color: var(--line);
     box-shadow: none;
   }
   .k-btn.ghost:hover:not(:disabled) {
     border-color: var(--gold);
-    background: rgba(217, 138, 22, 0.1);
+    background: rgba(217, 138, 22, 0.16);
+    transform: translateY(-1px);
   }
   .k-btn.green {
     border-color: var(--acc);
     background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
-    color: #06281e;
+    color: #05261c;
+    box-shadow: 0 4px 0 rgba(6, 78, 59, 0.3);
+  }
+  .k-btn.magic {
+    border-color: var(--magic);
+    background: linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 0 rgba(76, 29, 149, 0.35);
+  }
+
+  /* Руны-конструктор для быстрой вставки кода ребёнком */
+  .rune-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: var(--gold-light);
+    color: var(--ink);
+    border: 1.5px solid var(--gold);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+  }
+  .rune-chip:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: var(--gold);
+    color: #241604;
+  }
+  .rune-chip:active {
+    transform: translateY(1px);
   }
 
   .nav-tab {
     padding: 8px 13px;
-    border-radius: 12px;
+    border-radius: 13px;
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     border: 2px solid transparent;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: rgba(120, 98, 70, 0.08);
+    background: rgba(120, 98, 70, 0.09);
     color: var(--ink);
     white-space: nowrap;
   }
   .nav-tab:hover {
     border-color: var(--gold);
+    transform: translateY(-1px);
   }
   .nav-tab.active {
-    background: var(--gold);
+    background: linear-gradient(180deg, #f9c45c 0%, var(--gold) 100%);
     color: #241604;
     font-weight: 700;
-    box-shadow: 0 4px 12px rgba(217, 138, 22, 0.3);
+    box-shadow: 0 4px 12px rgba(217, 138, 22, 0.35);
   }
 
   textarea.code-editor {
@@ -162,9 +221,11 @@
     line-height: 1.55;
     resize: vertical;
     outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
   textarea.code-editor:focus {
     border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(217, 138, 22, 0.22);
   }
 
   pre.out-console {
@@ -187,7 +248,7 @@
     border: 2px dashed var(--gold);
     border-radius: 14px;
     padding: 16px;
-    min-height: 140px;
+    min-height: 145px;
     transition: all 0.2s;
   }
 
@@ -199,48 +260,95 @@
     font-size: 13px;
     line-height: 1.65;
     overflow-x: auto;
-    min-height: 140px;
+    min-height: 145px;
   }
 
   .tg { color: #ffb86b; }
   .at { color: #8be9fd; }
   .tx { color: #e2d9f3; }
 
-  /* Mascot float animation */
+  /* Шкала готовности с волшебным переливом */
+  .readiness-track {
+    width: 100%;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 999px;
+    overflow: hidden;
+    padding: 2px;
+    border: 1px solid var(--line);
+  }
+  :root[data-theme="dark"] .readiness-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .readiness-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f59e0b 0%, #10b981 60%, #34d399 100%);
+    background-size: 200% 100%;
+    animation: shimmerBar 2.5s linear infinite;
+    transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  @keyframes shimmerBar {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  /* Анимации маскота и реакций */
   @keyframes floatSlow {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(3deg); }
   }
   .mascot-avatar {
-    animation: floatSlow 3s ease-in-out infinite;
+    animation: floatSlow 3.2s ease-in-out infinite;
+    display: inline-block;
   }
 
   @keyframes popIn {
-    0% { opacity: 0; transform: scale(0.96) translateY(6px); }
+    0% { opacity: 0; transform: scale(0.96) translateY(8px); }
     100% { opacity: 1; transform: scale(1) translateY(0); }
   }
   .animate-pop {
-    animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: popIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  /* Particle coins */
+  @keyframes gentleShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .shake-box {
+    animation: gentleShake 0.45s ease;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217, 138, 22, 0.55); }
+    50% { box-shadow: 0 0 0 10px rgba(217, 138, 22, 0); }
+  }
+  .pulse-hint {
+    animation: pulseGlow 1.6s infinite;
+  }
+
+  /* Салют из монет и звёзд */
   .coin-particle {
     position: fixed;
     pointer-events: none;
     z-index: 9999;
-    font-size: 1.5rem;
-    animation: coinFly 1s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+    font-size: 1.6rem;
+    animation: coinFly 1.05s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
   }
   @keyframes coinFly {
-    0% { opacity: 1; transform: translate(0, 0) scale(0.7) rotate(0deg); }
-    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(360deg); }
+    0% { opacity: 1; transform: translate(0, 0) scale(0.6) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.35) rotate(360deg); }
   }
 
-  /* Figma Inspector guide lines */
+  /* Инспектор Figma */
   .fig-el {
     position: relative;
     cursor: pointer;
-    transition: outline 0.15s ease;
+    transition: outline 0.15s ease, transform 0.15s ease;
   }
   .fig-el:hover {
     outline: 2px dashed #0d99ff;
@@ -257,7 +365,7 @@
     color: #fff;
     font-size: 10px;
     font-family: 'JetBrains Mono', monospace;
-    padding: 1px 5px;
+    padding: 1px 6px;
     border-radius: 4px;
     white-space: nowrap;
     pointer-events: none;
@@ -275,77 +383,95 @@
     transform: translateX(-50%);
     background: var(--acc);
     color: #fff;
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: 999px;
     display: none;
     z-index: 9000;
     font-weight: 700;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
   }
 </style>
 </head>
 <body>
 
-<div class="max-w-6xl mx-auto px-3 sm:px-5 py-4">
-  <!-- HEADER -->
+<!-- Сказочные летающие светлячки на фоне -->
+<canvas id="fireflies-bg"></canvas>
+
+<div class="app-shell max-w-6xl mx-auto px-3 sm:px-5 py-4">
+  <!-- ШАПКА КОРОЛЕВСТВА -->
   <header class="k-card mb-4 flex flex-col gap-3">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="text-4xl select-none mascot-avatar" id="header-crest">🏰</div>
+        <div class="text-4xl select-none mascot-avatar cursor-pointer" id="header-crest" onclick="MagicSound.playFanfare(); toast('✨ Да здравствует Королевство Кода!')" title="Нажми для королевской фанфары!">🏰</div>
         <div>
-          <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Королевство JavaScript <span class="text-sm px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 align-middle">2.0</span></h1>
-          <p class="text-xs sm:text-sm" style="color:var(--mute)">Интерактивная школа кода, Git, Node.js и Figma</p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Королевство JavaScript</h1>
+            <span id="hero-title-pill" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/40">🌱 Юный Искатель</span>
+          </div>
+          <p class="text-xs sm:text-sm" style="color:var(--mute)">Сказочная интерактивная школа кода с умными проверками и подсказками</p>
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <div id="stats-badge" class="px-3.5 py-1.5 rounded-xl font-bold text-sm border-2" style="border-color:var(--gold); background:var(--gold-light); color:var(--ink)">
-          ⭐ 0/7 · 🪙 0
+      <div class="flex flex-wrap items-center gap-2">
+        <div id="stats-badge" class="px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm border-2" style="border-color:var(--gold); background:var(--gold-light); color:var(--ink)">
+          ⭐ 0/7 · 🛠️ 0/4 · 🪙 0
         </div>
+        <button class="k-btn ghost text-xs sm:text-sm !py-1.5 !px-3" onclick="toggleSound()" id="sound-btn" title="Включить или выключить волшебные звуки">
+          🔊 Звук
+        </button>
         <button class="k-btn ghost text-xs sm:text-sm !py-1.5 !px-3" onclick="toggleTheme()" id="theme-btn" title="Переключить тему">
           🌙 Тема
         </button>
-        <button class="k-btn ghost text-xs sm:text-sm !py-1.5 !px-3" onclick="showResetBox()" title="Сбросить прогресс">
+        <button class="k-btn ghost text-xs sm:text-sm !py-1.5 !px-3" onclick="showResetBox()" title="Начать заново">
           🗑️ Сброс
         </button>
       </div>
     </div>
 
-    <!-- Overall Kingdom Progress Bar -->
-    <div class="w-full bg-black/10 dark:bg-white/10 h-2.5 rounded-full overflow-hidden">
-      <div id="kingdom-progress-bar" class="h-full transition-all duration-500" style="width: 0%; background: linear-gradient(90deg, var(--gold), var(--acc));"></div>
+    <!-- Глобальная Шкала Готовности Королевства -->
+    <div>
+      <div class="flex items-center justify-between text-xs font-bold mb-1">
+        <span>👑 Общая шкала готовности Королевства:</span>
+        <span id="kingdom-progress-label" class="text-amber-600 dark:text-amber-400">0% (Новичок)</span>
+      </div>
+      <div class="readiness-track">
+        <div id="kingdom-progress-bar" class="readiness-fill" style="width: 0%;"></div>
+      </div>
     </div>
 
-    <!-- Reset confirmation inline bar (No confirm() used!) -->
+    <!-- Безопасная панель подтверждения сброса (без confirm!) -->
     <div id="reset-confirm-bar" class="hidden p-3 rounded-xl border-2 flex flex-wrap items-center justify-between gap-2 text-sm" style="border-color:var(--bad); background:var(--bad-light)">
-      <span>⚠️ <b>Точно сбросить весь прогресс, монеты и достижения?</b></span>
+      <span>⚠️ <b>Точно сбросить весь прогресс, монеты и открытые подсказки?</b></span>
       <div class="flex gap-2">
-        <button class="k-btn !py-1 !px-3 text-xs" style="background:var(--bad); border-color:var(--bad); color:#fff" onclick="confirmResetProgress()">Да, обнулить</button>
+        <button class="k-btn !py-1 !px-3 text-xs" style="background:var(--bad); border-color:var(--bad); color:#fff" onclick="confirmResetProgress()">Да, начать с чистого листа</button>
         <button class="k-btn ghost !py-1 !px-3 text-xs" onclick="hideResetBox()">Отмена</button>
       </div>
     </div>
 
-    <!-- Navigation Tabs -->
+    <!-- Навигация по 6 локациям -->
     <nav class="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1" id="main-nav">
       <button class="nav-tab active" data-tab="map" onclick="switchTab('map')">🗺️ Карта JS (7 земель)</button>
-      <button class="nav-tab" data-tab="workshop" onclick="switchTab('workshop')">🛠️ Мастерская (Модуль)</button>
-      <button class="nav-tab" data-tab="git" onclick="switchTab('git')">🐙 Кузница Git и GitHub</button>
+      <button class="nav-tab" data-tab="workshop" onclick="switchTab('workshop')">🛠️ Мастерская Героя</button>
+      <button class="nav-tab" data-tab="git" onclick="switchTab('git')">🐙 Кузница Git</button>
       <button class="nav-tab" data-tab="node" onclick="switchTab('node')">🟢 Мельница Node.js</button>
       <button class="nav-tab" data-tab="figma" onclick="switchTab('figma')">🎨 Гильдия Figma (.fig)</button>
       <button class="nav-tab" data-tab="test" onclick="switchTab('test')">🏆 Храм Испытаний</button>
     </nav>
   </header>
 
-  <!-- MASCOT HELPER BANNER -->
-  <div class="k-card mb-4 !py-3 !px-4 flex items-center gap-3 border-l-8" style="border-left-color: var(--gold);">
-    <div class="text-3xl sm:text-4xl mascot-avatar select-none">🐱‍👓</div>
+  <!-- ГОВОРЯЩИЙ ПОМОЩНИК КОТ-КОМПИЛЯТОР БАСИК -->
+  <div id="mascot-banner" class="k-card mb-4 !py-3 !px-4 flex items-center gap-3.5 border-l-8 transition-all" style="border-left-color: var(--gold);">
+    <div id="mascot-face" class="text-4xl sm:text-5xl mascot-avatar select-none cursor-pointer" onclick="pokeMascot()" title="Погладить Кота Басика">🐱‍👓</div>
     <div class="flex-1 text-sm">
-      <div class="font-bold text-amber-600 dark:text-amber-400">Кот-Компилятор Басик:</div>
-      <div id="mascot-speech">Привет, искатель приключений! Выбирай локацию на Карте или загляни в Мастерскую, Кузницу Git, Мельницу Node.js и Гильдию Figma!</div>
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-amber-600 dark:text-amber-400">Кот-Компилятор Басик</span>
+        <span id="mascot-mood-tag" class="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 font-semibold">✨ Вдохновлён</span>
+      </div>
+      <div id="mascot-speech" class="mt-0.5">Привет, юный волшебник! Выбирай землю на Карте, собирай заклинания из волшебных рун и следи за Шкалой готовности. Если что-то не получится — я сразу открою свиток с подсказкой!</div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT CONTAINER -->
+  <!-- ОСНОВНОЙ КОНТЕЙНЕР ПРИЛОЖЕНИЯ -->
   <main id="app" class="animate-pop"></main>
 </div>
 
@@ -353,18 +479,162 @@
 
 <script>
 /* ==========================================================================
+   ВОЛШЕБНЫЙ ЗВУКОВОЙ СИНТЕЗАТОР (WEB AUDIO API — БЕЗ ВНЕШНИХ ФАЙЛОВ)
+   ========================================================================== */
+var MagicSound = (function() {
+  var ctx = null;
+  var enabled = true;
+
+  function getCtx() {
+    if (!enabled) return null;
+    if (!ctx) {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) ctx = new AudioCtx();
+    }
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    return ctx;
+  }
+
+  function playTone(freq, type, duration, delay, vol) {
+    var c = getCtx();
+    if (!c) return;
+    try {
+      var osc = c.createOscillator();
+      var gain = c.createGain();
+      var start = c.currentTime + (delay || 0);
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, start);
+
+      gain.gain.setValueAtTime(0.001, start);
+      gain.gain.exponentialRampToValueAtTime(vol || 0.12, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+      osc.connect(gain);
+      gain.connect(c.destination);
+      osc.start(start);
+      osc.stop(start + duration + 0.02);
+    } catch (e) {}
+  }
+
+  return {
+    isEnabled: function() { return enabled; },
+    setEnabled: function(v) { enabled = !!v; },
+    playClick: function() {
+      playTone(580, 'triangle', 0.06, 0, 0.07);
+    },
+    playRune: function() {
+      playTone(660, 'sine', 0.09, 0, 0.09);
+      playTone(880, 'triangle', 0.11, 0.05, 0.08);
+    },
+    playHint: function() {
+      // Перелив арфы (пыльца феи)
+      var notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach(function(f, idx) {
+        playTone(f, 'sine', 0.18, idx * 0.055, 0.08);
+      });
+    },
+    playCoin: function() {
+      playTone(987.77, 'sine', 0.09, 0, 0.11);
+      playTone(1318.51, 'sine', 0.25, 0.07, 0.12);
+    },
+    playSuccess: function() {
+      var notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach(function(f, idx) {
+        playTone(f, 'triangle', 0.22, idx * 0.07, 0.12);
+      });
+    },
+    playFanfare: function() {
+      var melody = [
+        { f: 523.25, d: 0.14, t: 0 },
+        { f: 659.25, d: 0.14, t: 0.12 },
+        { f: 783.99, d: 0.14, t: 0.24 },
+        { f: 1046.50, d: 0.38, t: 0.36 }
+      ];
+      melody.forEach(function(n) {
+        playTone(n.f, 'triangle', n.d, n.t, 0.14);
+      });
+    },
+    playError: function() {
+      // Мягкий сказочный «бульк котла», не пугающий ребёнка
+      playTone(310, 'sine', 0.15, 0, 0.1);
+      playTone(235, 'triangle', 0.24, 0.11, 0.1);
+    }
+  };
+})();
+
+/* ==========================================================================
+   АНИМАЦИЯ СКАЗОЧНЫХ СВЕТЛЯЧКОВ НА ФОНЕ
+   ========================================================================== */
+(function initFireflies() {
+  var canvas = document.getElementById('fireflies-bg');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var count = 28;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for (var i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: 1.5 + Math.random() * 2.8,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: -0.15 - Math.random() * 0.35,
+      alpha: 0.2 + Math.random() * 0.6,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.phase += 0.03;
+      if (p.y < -10) p.y = canvas.height + 10;
+      if (p.x < -10) p.x = canvas.width + 10;
+      if (p.x > canvas.width + 10) p.x = -10;
+
+      var glow = (Math.sin(p.phase) + 1) * 0.5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = isDark
+        ? 'rgba(245, 176, 65, ' + (0.18 + glow * 0.45) + ')'
+        : 'rgba(217, 138, 22, ' + (0.12 + glow * 0.28) + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ==========================================================================
    СОСТОЯНИЕ КОРОЛЕВСТВА И СОХРАНЕНИЕ В LOCALSTORAGE
    ========================================================================== */
-var STORAGE_KEY = 'kingdom_js_v2_state';
+var STORAGE_KEY = 'kingdom_js_v2_fairy_state';
 var state = {
-  done: {},          // Пройденные базовые уроки JS (0..6)
-  coins: 0,          // Золотые монеты
-  best: 0,           // Лучший результат в тесте
-  workshopSteps: {}, // Выполненные шаги практического модуля (1..4)
-  gitSteps: {},      // Выполненные шаги тренажёра Git
-  nodeStarted: false,// Запускал ли сервер Node.js
-  figmaInspected: false, // Изучил ли макет .fig
-  theme: 'light'
+  done: {},             // Пройденные базовые уроки JS (0..6)
+  lessonReadiness: {},  // Процент готовности каждого урока (0..100)
+  lessonAttempts: {},   // Число неудачных попыток в уроке (для авто-подсказок)
+  coins: 0,             // Золотые монеты
+  best: 0,              // Лучший результат в тесте
+  workshopSteps: {},    // Выполненные шаги Мастерской (1..4)
+  workshopFails: 0,     // Неудачные проверки в Мастерской
+  gitSteps: {},         // Выполненные шаги миссии Git (init, status, add, commit, push)
+  nodeChecks: {},       // Выполненные шаги миссии Node.js (run, custom, routes)
+  figmaChecks: {},      // Выполненные шаги миссии Figma (layers, copyCss, fileTest)
+  theme: 'light',
+  sound: true
 };
 
 function loadState() {
@@ -377,7 +647,9 @@ function loadState() {
       state.theme = 'dark';
     }
   } catch (e) {}
+  MagicSound.setEnabled(state.sound !== false);
   applyTheme();
+  updateSoundButton();
 }
 
 function saveState() {
@@ -394,39 +666,92 @@ function applyTheme() {
 }
 
 function toggleTheme() {
+  MagicSound.playClick();
   state.theme = state.theme === 'dark' ? 'light' : 'dark';
   applyTheme();
   saveState();
 }
 
+function updateSoundButton() {
+  var btn = document.getElementById('sound-btn');
+  if (btn) {
+    btn.innerHTML = MagicSound.isEnabled() ? '🔊 Звук' : '🔇 Тихо';
+  }
+}
+
+function toggleSound() {
+  var next = !MagicSound.isEnabled();
+  MagicSound.setEnabled(next);
+  state.sound = next;
+  if (next) MagicSound.playHint();
+  updateSoundButton();
+  saveState();
+}
+
 function showResetBox() {
+  MagicSound.playClick();
   document.getElementById('reset-confirm-bar').classList.remove('hidden');
 }
 function hideResetBox() {
+  MagicSound.playClick();
   document.getElementById('reset-confirm-bar').classList.add('hidden');
 }
 function confirmResetProgress() {
+  MagicSound.playError();
   state = {
     done: {},
+    lessonReadiness: {},
+    lessonAttempts: {},
     coins: 0,
     best: 0,
     workshopSteps: {},
+    workshopFails: 0,
     gitSteps: {},
-    nodeStarted: false,
-    figmaInspected: false,
-    theme: state.theme
+    nodeChecks: {},
+    figmaChecks: {},
+    theme: state.theme,
+    sound: state.sound
   };
   saveState();
   hideResetBox();
-  toast('Прогресс сброшен! Начинаем новое приключение 🌟');
+  toast('Прогресс сброшен! Начинаем новое сказочное приключение 🌟');
   switchTab('map');
 }
 
 function $(id) { return document.getElementById(id); }
 
-function setMascot(text) {
+/* Управление эмоциями и репликами Кота Басика */
+function setMascot(text, mood) {
   var el = $('mascot-speech');
+  var face = $('mascot-face');
+  var tag = $('mascot-mood-tag');
   if (el) el.innerHTML = text;
+
+  var moods = {
+    normal: { icon: '🐱‍👓', label: '✨ Готов помочь', cls: 'bg-amber-500/15 text-amber-700 dark:text-amber-300' },
+    happy:  { icon: '😸', label: '🎉 Гордится тобой!', cls: 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' },
+    hint:   { icon: '🧙‍♂️', label: '🕯️ Шепчет подсказку', cls: 'bg-purple-500/20 text-purple-700 dark:text-purple-300' },
+    oops:   { icon: '😿', label: '🐾 Поддерживает тебя', cls: 'bg-rose-500/20 text-rose-700 dark:text-rose-300' },
+    star:   { icon: '🤩', label: '👑 Восхищён!', cls: 'bg-amber-500/25 text-amber-800 dark:text-amber-200' }
+  };
+  var m = moods[mood || 'normal'] || moods.normal;
+  if (face) face.textContent = m.icon;
+  if (tag) {
+    tag.className = 'text-[11px] px-2 py-0.5 rounded-full font-semibold ' + m.cls;
+    tag.textContent = m.label;
+  }
+}
+
+function pokeMascot() {
+  MagicSound.playHint();
+  var phrases = [
+    'Мур-мяу! Помни: каждый великий программист когда-то написал свою первую переменную <code>let</code>!',
+    'Если заклинание не сработало с первого раза — не беда! Я всегда открою тебе Свиток Подсказок!',
+    'Попробуй нажимать на золотые руны над редактором — они сами вставляют кусочки кода!',
+    'Следи за Шкалой готовности: когда все кружочки станут зелёными — прозвучит победная фанфара!'
+  ];
+  var pick = phrases[Math.floor(Math.random() * phrases.length)];
+  setMascot(pick, 'happy');
 }
 
 function toast(text, isBad) {
@@ -437,29 +762,30 @@ function toast(text, isBad) {
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(function() {
     e.style.display = 'none';
-  }, 2600);
+  }, 2800);
 }
 
-/* Салют из золотых монеток при успехе */
+/* Салют из золотых монет и звёзд */
 function spawnCoinsEffect() {
-  var emojis = ['🪙', '✨', '⭐', '💎'];
-  for (var i = 0; i < 14; i++) {
+  var emojis = ['🪙', '✨', '⭐', '💎', '🌟'];
+  for (var i = 0; i < 16; i++) {
     var span = document.createElement('span');
     span.className = 'coin-particle';
     span.textContent = emojis[i % emojis.length];
-    span.style.left = (window.innerWidth / 2 + (Math.random() * 80 - 40)) + 'px';
-    span.style.top = (window.innerHeight / 2 + (Math.random() * 40 - 20)) + 'px';
+    span.style.left = (window.innerWidth / 2 + (Math.random() * 100 - 50)) + 'px';
+    span.style.top = (window.innerHeight / 2 + (Math.random() * 50 - 25)) + 'px';
     var angle = Math.random() * Math.PI * 2;
-    var dist = 90 + Math.random() * 160;
+    var dist = 90 + Math.random() * 170;
     span.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-    span.style.setProperty('--ty', (Math.sin(angle) * dist - 80) + 'px');
+    span.style.setProperty('--ty', (Math.sin(angle) * dist - 90) + 'px');
     document.body.appendChild(span);
-    setTimeout(function(el) { el.remove(); }, 1000, span);
+    setTimeout(function(el) { el.remove(); }, 1050, span);
   }
 }
 
 function addCoins(amount, reason) {
   state.coins += amount;
+  MagicSound.playCoin();
   saveState();
   spawnCoinsEffect();
   toast('+' + amount + ' 🪙 ' + (reason || 'Награда получена!'));
@@ -472,20 +798,34 @@ function updateHeaderStats() {
   if (badge) {
     badge.innerHTML = '⭐ Уроки: ' + nLessons + '/' + L.length + ' · 🛠️ ' + nWorkshop + '/4 · 🪙 ' + state.coins;
   }
-  // Вычисляем общий прогресс королевства (7 уроков + 4 шага мастерской + Git + Node + Figma + Тест = 15 вех)
-  var totalMilestones = L.length + 4 + 4;
-  var achieved = nLessons + nWorkshop +
-    (Object.keys(state.gitSteps).length >= 5 ? 1 : 0) +
-    (state.nodeStarted ? 1 : 0) +
-    (state.figmaInspected ? 1 : 0) +
-    (state.best >= 7 ? 1 : 0);
-  var pct = Math.min(100, Math.round((achieved / totalMilestones) * 100));
+
+  // Подсчёт общей шкалы готовности Королевства (7 уроков + 4 шага мастерской + 5 шагов Git + 3 шага Node + 3 шага Figma + Тест = 23 вехи)
+  var gitDoneCount = Object.keys(state.gitSteps).length;
+  var nodeDoneCount = Object.keys(state.nodeChecks).length;
+  var figmaDoneCount = Object.keys(state.figmaChecks).length;
+  var testDone = state.best >= 7 ? 1 : 0;
+
+  var totalMax = L.length + 4 + 5 + 3 + 3 + 1;
+  var currentPts = nLessons + nWorkshop + Math.min(5, gitDoneCount) + Math.min(3, nodeDoneCount) + Math.min(3, figmaDoneCount) + testDone;
+  var pct = Math.min(100, Math.round((currentPts / totalMax) * 100));
+
   var bar = $('kingdom-progress-bar');
   if (bar) bar.style.width = pct + '%';
+
+  var rankTitle = pct >= 90 ? '👑 Верховный Архимаг Кода'
+                : pct >= 65 ? '🛡️ Рыцарь Изумрудного Алгоритма'
+                : pct >= 35 ? '🔮 Чародей-Подмастерье'
+                : pct >= 10 ? '🗡️ Отважный Оруженосец'
+                : '🌱 Юный Искатель';
+
+  var lbl = $('kingdom-progress-label');
+  if (lbl) lbl.textContent = pct + '% (' + rankTitle + ')';
+  var pill = $('hero-title-pill');
+  if (pill) pill.textContent = rankTitle;
 }
 
-/* Копирование в буфер обмена (безопасно для iFrame) */
 function copyText(text, label) {
+  MagicSound.playClick();
   var ta = document.createElement('textarea');
   ta.value = text;
   ta.style.position = 'fixed';
@@ -502,145 +842,261 @@ function copyText(text, label) {
 }
 
 /* ==========================================================================
-   ДЕТСКИЙ ПЕРЕВОДЧИК ОШИБОК JAVASCRIPT
+   ДОБРЫЙ ДЕТСКИЙ ПЕРЕВОДЧИК ОШИБОК JAVASCRIPT
    ========================================================================== */
 function translateJsError(err) {
   var msg = String(err && err.message ? err.message : err);
   if (/Unexpected token|Unexpected end of input/i.test(msg)) {
-    return 'Кажется, пропущена закрывающая скобка <code>)</code>, фигурная скобка <code>}</code> или запятая. Проверь парность всех скобок!';
+    return 'Кажется, потерялась закрывающая скобка <code>)</code>, фигурная скобка <code>}</code> или кавычка. Проверь, у каждой ли открытой скобки есть пара!';
   }
   if (/Invalid or unexpected token|unterminated string/i.test(msg)) {
-    return 'Проверь кавычки вокруг текста! Если открыл двойную кавычку <code>"</code>, закрыть нужно тоже двойной <code>"</code>.';
+    return 'Проверь кавычки вокруг слов! Текст должен начинаться и заканчиваться одинаковыми кавычками, например: <code>"Дракон"</code>.';
   }
   if (/is not defined/i.test(msg)) {
     var v = msg.split(' ')[0];
-    return 'Переменная или команда <code>' + esc(v) + '</code> не найдена. Возможно, в её имени опечатка или ты забыл создать её через <code>let</code> / <code>const</code>, либо забыл взять текст в кавычки.';
+    return 'Компьютер не знает слово <code>' + esc(v) + '</code>. Если это просто текст — возьми его в кавычки <code>"' + esc(v) + '"</code>. А если это переменная — сначала создай её через <code>let ' + esc(v) + ' = ...</code>';
   }
   if (/Assignment to constant variable/i.test(msg)) {
-    return 'Ты попытался изменить переменную, созданную через <code>const</code> (запертый сундук). Используй <code>let</code>, если значение нужно менять!';
+    return 'Ты попытался поменять сундук, созданный через <code>const</code>. Сундук <code>const</code> заперт на ключ! Используй <code>let</code>, если хочешь менять значение.';
   }
   if (/Cannot set properties of null|Cannot read properties of null/i.test(msg)) {
-    return 'Элемент на странице не найден (<code>querySelector</code> вернул <code>null</code>). Проверь, правильно ли написан тег, класс (с точкой) или <code>#id</code> (с решёткой)!';
+    return 'Команда <code>querySelector</code> не нашла такой элемент на Белой Сцене (вернула <code>null</code>). Проверь, правильно ли написано имя тега или <code>#id</code>.';
   }
   if (/is not a function/i.test(msg)) {
-    return 'Проверь регистр букв в названии команды! В JavaScript важны большие и маленькие буквы: например, <code>querySelector</code> или <code>addEventListener</code>.';
+    return 'В названии команды закралась опечатка в больших или маленьких буквах. Например, правильно пишется <code>console.log</code>, <code>querySelector</code>, <code>addEventListener</code>.';
   }
-  return 'Внимательно проверь последнюю изменённую строчку: все ли скобки, кавычки и точки на своих местах.';
+  return 'Внимательно проверь последнюю строчку, которую ты изменил: все ли скобки, точки и кавычки стоят на своих местах.';
 }
 
 /* ==========================================================================
-   БАЗОВЫЕ 7 УРОКОВ JAVASCRIPT (ОТЛАЖЕННЫЕ + ВИЗУАЛИЗАЦИИ)
+   7 СКАЗОЧНЫХ ЗЕМЕЛЬ JAVASCRIPT С ТРЁХЭТАПНОЙ ПРОВЕРКОЙ И 3 УРОВНЯМИ ПОДСКАЗОК
    ========================================================================== */
-var BASE_STAGE_HTML = '<h2>Привет, мир!</h2><p class="txt">Я живу в DOM-дереве</p><button id="btn" class="px-4 py-2 rounded-lg font-bold bg-amber-500 text-slate-900 hover:bg-amber-400 transition">Нажми меня</button>';
+var BASE_STAGE_HTML = '<h2>Привет, мир!</h2><p class="txt">Я живу в DOM-дереве</p><button id="btn" class="px-4 py-2 rounded-lg font-bold bg-amber-500 text-slate-900 hover:bg-amber-400 transition shadow">Нажми меня</button>';
 
 var L = [
   {
     ico: '🌾',
     name: 'Долина Переменных',
-    story: 'Ты — юный путешественник и ступил на землю JavaScript. Первый житель, Гном-Кладовщик, протягивает тебе волшебные коробки с ярлыками.',
-    learn: '<b>Переменная</b> — это коробка с названием, в которую кладут значение. <code>let</code> создаёт коробку, содержимое которой можно менять, а <code>const</code> — запертый сундук (константу). Числа пишем просто так, а текст — обязательно в кавычках. Команда <code>console.log()</code> выводит содержимое в журнал.',
+    story: 'Ты ступил в солнечную Долину Переменных. Гном-Кладовщик хранит сокровища в подписанных волшебных коробках и учит тебя создавать свои собственные!',
+    learn: '<b>Переменная</b> — это волшебная коробка с наклейкой-именем. Команда <code>let</code> создаёт коробку, в которой предметы можно менять, а <code>const</code> — заколдованный сундук (константу), содержимое которого нельзя заменить. Числа пишем без кавычек, а слова — обязательно в кавычках <code>"..."</code>. Команда <code>console.log(...)</code> выводит содержимое в Королевский Журнал.',
     code: 'let hero = "Алиса";\nlet gold = 5;\ngold = gold + 10;\nconsole.log(hero);\nconsole.log("Золота:", gold);',
-    task: 'Добавь в код <b>новую</b> переменную (например, <code>const pet = "Дракон";</code> или измени количество золота) и выведи её через <code>console.log()</code>.',
-    hint: 'const pet = "Огненный Дракон";\nlet gold = 100;\nconsole.log("Питомец:", pet);\nconsole.log("Золота:", gold);',
-    check: function(r) {
-      // Проверяем, что ученик изменил стартовый код или добавил свою переменную и вывел в консоль без ошибок
-      var changed = r.code.trim() !== L[0].code.trim();
-      return changed && /(let|const)\s+\w+/.test(r.code) && r.out.length > 0 && !r.err;
+    task: 'Самостоятельно создай <b>новую переменную</b> (например, <code>let pet = "Дракон";</code> или измени количество золота) и выведи её в журнал через <code>console.log()</code>.',
+    runes: [
+      { label: '📦 let pet = "Дракон";', snippet: '\nlet pet = "Дракон";' },
+      { label: '🔒 const sword = "Экскалибур";', snippet: '\nconst sword = "Экскалибур";' },
+      { label: '📜 console.log(pet);', snippet: '\nconsole.log(pet);' },
+      { label: '🪙 gold = 100;', snippet: '\ngold = 100;' }
+    ],
+    hints: [
+      'Спустись на новую строчку в конце редактора. Напиши слово <code>let</code>, затем придумай английское имя коробки (например, <code>pet</code>), поставь знак <code>=</code> и напиши текст в кавычках.',
+      'Скопируй или дополни этот шаблон (замени пропуски):\n<code>let pet = "Огненный Лис";\nconsole.log(pet);</code>',
+      'let hero = "Алиса";\nlet gold = 50;\nconst pet = "Огненный Дракон";\nconsole.log("Герой:", hero);\nconsole.log("Питомец:", pet);\nconsole.log("Золота:", gold);'
+    ],
+    templateCode: 'let hero = "Алиса";\nlet gold = 5;\n// Впиши своё слово внутри кавычек ниже:\nlet pet = "Дракон";\nconsole.log(pet);',
+    verify: function(r) {
+      var noErr = !r.err;
+      var changed = r.code.trim() !== L[0].code.trim() && /(let|const)\s+\w+/.test(r.code);
+      var printed = noErr && changed && r.out.length >= 2;
+      return [
+        { ok: noErr, text: 'Заклинание написано без синтаксических ошибок' },
+        { ok: changed, text: 'Ты самостоятельно изменил код или добавил новую переменную (let / const)' },
+        { ok: printed, text: 'Результат успешно выведен в Королевский Журнал (console.log)' }
+      ];
     }
   },
   {
     ico: '🌲',
     name: 'Лес Условий',
-    story: 'Тропа раздваивается у древнего камня. Страж леса пускает дальше только тех, кто набрал хотя бы 10 уровня. Он проверяет условие!',
-    learn: '<b>Условие</b> <code>if</code> выбирает путь. Если выражение в круглых скобках истинно (<code>true</code>) — выполняется первый блок в фигурных скобках <code>{ ... }</code>, иначе — запасной блок <code>else</code>. Знаки сравнения: <code>&gt;</code> (больше), <code>&lt;</code> (меньше), <code>&gt;=</code> (больше или равно), <code>===</code> (точно равно).',
+    story: 'У развилки Древнего Леса стоит Каменный Страж. Он проверяет уровень каждого путника: если уровень 10 или больше — ворота открываются!',
+    learn: '<b>Условие</b> <code>if (...)</code> проверяет правдивость выражения в круглых скобках. Если там правда (<code>true</code>) — выполняется первая ветка в фигурных скобках <code>{ ... }</code>. Иначе срабатывает запасная ветка <code>else { ... }</code>. Знак <code>&gt;=</code> означает «больше или равно».',
     code: 'let age = 8;\nif (age >= 10) {\n  console.log("Проход открыт");\n} else {\n  console.log("Подрасти ещё!");\n}',
-    task: 'Измени значение переменной <code>age</code> так, чтобы Страж леса сказал в журнале <b>«Проход открыт»</b>.',
-    hint: 'let age = 12;\nif (age >= 10) {\n  console.log("Проход открыт");\n} else {\n  console.log("Подрасти ещё!");\n}',
-    check: function(r) {
-      return !r.err && r.out.join(' ').indexOf('Проход открыт') > -1;
+    task: 'Измени число в переменной <code>age</code> в первой строчке так, чтобы оно стало <b>10 или больше</b>, и Страж произнёс в журнале: <b>«Проход открыт»</b>.',
+    runes: [
+      { label: '🔟 let age = 12;', snippet: 'let age = 12;' },
+      { label: '⚖️ age >= 10', snippet: 'age >= 10' },
+      { label: '🔀 if (...) { }', snippet: '\nif (age >= 10) {\n  console.log("Проход открыт");\n}' }
+    ],
+    hints: [
+      'Посмотри на самую первую строчку: <code>let age = 8;</code>. Число 8 меньше 10, поэтому Страж не пускает. На какое число нужно заменить восьмёрку?',
+      'Замени первую строчку на число больше 10, например:\n<code>let age = 15;</code>',
+      'let age = 15;\nif (age >= 10) {\n  console.log("Проход открыт");\n} else {\n  console.log("Подрасти ещё!");\n}'
+    ],
+    templateCode: 'let age = 12; // Число 12 больше 10!\nif (age >= 10) {\n  console.log("Проход открыт");\n} else {\n  console.log("Подрасти ещё!");\n}',
+    verify: function(r) {
+      var noErr = !r.err;
+      var hasIf = /if\s*\(/.test(r.code);
+      var opened = noErr && r.out.join(' ').indexOf('Проход открыт') > -1;
+      return [
+        { ok: noErr, text: 'Код выполнен без ошибок' },
+        { ok: hasIf, text: 'В коде работает магическая развилка if / else' },
+        { ok: opened, text: 'Страж сказал «Проход открыт» в Королевском Журнале' }
+      ];
     }
   },
   {
     ico: '⛰️',
     name: 'Горы Циклов',
-    story: 'Чтобы подняться на снежную вершину, нужно сделать много шагов. Писать команду «шаг» сто раз подряд долго и скучно — на помощь приходит цикл!',
-    learn: '<b>Цикл</b> <code>for</code> повторяет блок кода нужное число раз. В скобках три части через точку с запятой: старт (<code>let i = 1</code>), условие продолжения (<code>i &lt;= 3</code>) и шаг изменения (<code>i++</code> увеличивает <code>i</code> на 1).',
+    story: 'К вершине Хрустальной Горы ведут крутые ступени. Чтобы не писать команду шага много раз подряд, гномы используют мотор-повторитель — Цикл!',
+    learn: '<b>Цикл</b> <code>for</code> сам повторяет команды внутри <code>{ ... }</code>. В круглых скобках три настройки через точку с запятой: 1) с какого шага начать (<code>let i = 1</code>); 2) до какого шага идти (<code>i &lt;= 3</code>); 3) прибавлять по 1 после каждого круга (<code>i++</code>).',
     code: 'for (let i = 1; i <= 3; i++) {\n  console.log("Шаг номер " + i);\n}',
-    task: 'Измени условие цикла так, чтобы путешественник сделал <b>7 шагов или больше</b>.',
-    hint: 'for (let i = 1; i <= 7; i++) {\n  console.log("Шаг номер " + i);\n}',
-    check: function(r) {
-      return !r.err && r.out.length >= 7;
+    task: 'Измени границу цикла (вместо <code>3</code> напиши <b>7</b> или больше), чтобы герой сделал <b>не меньше 7 шагов</b> к вершине!',
+    runes: [
+      { label: '⛰️ i <= 7', snippet: 'i <= 7' },
+      { label: '🔟 i <= 10', snippet: 'i <= 10' },
+      { label: '🔁 Цикл на 7 шагов', snippet: 'for (let i = 1; i <= 7; i++) {\n  console.log("Шаг номер " + i);\n}' }
+    ],
+    hints: [
+      'Найди в первой строчке запись <code>i &lt;= 3</code>. Тройка означает, что цикл остановится на 3-м шаге. Поменяй <code>3</code> на <code>7</code>!',
+      'Вот как должна выглядеть первая строчка:\n<code>for (let i = 1; i &lt;= 7; i++) {</code>',
+      'for (let i = 1; i <= 7; i++) {\n  console.log("Шаг номер " + i);\n}'
+    ],
+    templateCode: 'for (let i = 1; i <= 7; i++) {\n  console.log("Шаг номер " + i);\n}',
+    verify: function(r) {
+      var noErr = !r.err;
+      var hasFor = /for\s*\(/.test(r.code);
+      var enoughSteps = noErr && r.out.length >= 7;
+      return [
+        { ok: noErr, text: 'Код цикла работает без ошибок' },
+        { ok: hasFor, text: 'Использовано заклинание цикла for (...)' },
+        { ok: enoughSteps, text: 'Сделано 7 или более шагов (сейчас шагов: ' + r.out.length + ')' }
+      ];
     }
   },
   {
     ico: '🏯',
     name: 'Замок Функций',
-    story: 'В замке живёт Архимаг. Он записывает «заклинания» в книгу — один раз создаёт рецепт, а потом вызывает его по имени сколько угодно раз!',
-    learn: '<b>Функция</b> — это команда-заклинание с именем. Объявляем её так: <code>function имя(параметр) { ... }</code>. Вызываем со скобками: <code>имя("значение")</code>. Слово <code>return</code> возвращает готовый результат из функции.',
+    story: 'В Замке Функций Верховный Чародей учит записывать собственные рецепты заклинаний. Создай функцию один раз — и вызывай её по имени когда угодно!',
+    learn: '<b>Функция</b> — это твоя собственная команда. Создаём её словом <code>function имя(параметр) { ... }</code>. Внутри слово <code>return</code> возвращает готовый результат. Чтобы запустить функцию, пишем её имя с круглыми скобками: <code>имя(5)</code>.',
     code: 'function greet(name) {\n  return "Привет, " + name + "!";\n}\nconsole.log(greet("Волшебник"));\nconsole.log(greet("Принцесса"));',
-    task: 'Напиши свою функцию (например, <code>function double(n)</code>, которая возвращает число <code>n * 2</code>) и выведи результат её вызова в <code>console.log</code>.',
-    hint: 'function double(n) {\n  return n * 2;\n}\nconsole.log("Удвоение:", double(25));',
-    check: function(r) {
-      var changed = r.code.trim() !== L[3].code.trim();
-      return changed && !r.err && (/function\s+\w+|=>/.test(r.code)) && r.out.length > 0;
+    task: 'Добавь в код свою функцию (или измени существующую и вызови её с новым героем), чтобы она возвращала результат через <code>return</code> и выводила его в <code>console.log</code>.',
+    runes: [
+      { label: '🪄 Функция double(n)', snippet: '\nfunction double(n) {\n  return n * 2;\n}\nconsole.log(double(15));' },
+      { label: '📣 console.log(greet("Дракон"));', snippet: '\nconsole.log(greet("Дракон"));' },
+      { label: '🔙 return ', snippet: 'return ' }
+    ],
+    hints: [
+      'Ты можешь нажать на золотую руну <b>«🪄 Функция double(n)»</b> над редактором или сам дописать вызов <code>console.log(greet("Рыцарь"));</code> в конце кода!',
+      'Добавь в конец кода функцию удвоения силы:\n<code>function power(n) {\n  return n * 10;\n}\nconsole.log(power(5));</code>',
+      'function greet(name) {\n  return "Привет, " + name + "!";\n}\nfunction double(n) {\n  return n * 2;\n}\nconsole.log(greet("Архимаг"));\nconsole.log("Сила удвоена:", double(25));'
+    ],
+    templateCode: 'function greet(name) {\n  return "Привет, " + name + "!";\n}\nfunction double(n) {\n  return n * 2;\n}\nconsole.log(greet("Рыцарь"));\nconsole.log("Удвоение:", double(10));',
+    verify: function(r) {
+      var noErr = !r.err;
+      var hasFn = /function\s+\w+|=>/.test(r.code) && /return\s+/.test(r.code);
+      var changed = noErr && hasFn && r.code.trim() !== L[3].code.trim() && r.out.length > 0;
+      return [
+        { ok: noErr, text: 'Заклинание функции написано без ошибок' },
+        { ok: hasFn, text: 'В коде есть функция (function) с возвратом значения (return)' },
+        { ok: changed, text: 'Ты добавил свою функцию или новый вызов и вывел ответ в журнал' }
+      ];
     }
   },
   {
     ico: '🕳️',
     name: 'Пещера Массивов',
-    story: 'В глубине пещеры стоит длинный сундук с пронумерованными ячейками. В программировании такой упорядоченный список сокровищ называется массивом.',
-    learn: '<b>Массив</b> — список элементов в квадратных скобках: <code>["меч", "щит"]</code>. Важный секрет: нумерация ячеек (индексы) всегда начинается с <b>0</b>! Команда <code>.push(x)</code> добавляет предмет в конец, <code>.length</code> показывает количество предметов, а цикл <code>for (let item of bag)</code> перебирает все предметы.',
+    story: 'В Пещере Массивов стоят длинные походные сундуки, разделённые на пронумерованные секции. В них удобно хранить целый список артефактов!',
+    learn: '<b>Массив</b> — это список предметов в квадратных скобках: <code>["меч", "щит"]</code>. Главная тайна: счёт ячеек всегда начинается с <b>нуля</b> (<code>bag[0]</code> — это первый предмет). Команда <code>bag.push("предмет")</code> кладёт новый трофей в конец сундука!',
     code: 'let bag = ["меч", "щит"];\nbag.push("зелье");\nconsole.log("Первый предмет:", bag[0]);\nconsole.log("Всего в сумке:", bag.length);\nfor (let item of bag) {\n  console.log("Предмет: " + item);\n}',
-    task: 'Добавь в рюкзак <code>bag</code> ещё хотя бы два предмета с помощью <code>bag.push(...)</code> (чтобы всего стало не меньше 4 предметов) и запусти код.',
-    hint: 'let bag = ["меч", "щит"];\nbag.push("зелье");\nbag.push("карта сокровищ");\nbag.push("золотой ключ");\nconsole.log("Всего в сумке:", bag.length);\nfor (let item of bag) {\n  console.log("Предмет: " + item);\n}',
-    check: function(r) {
-      return !r.err && (r.code.match(/\.push\s*\(/g) || []).length >= 3 && r.out.length > 0;
+    task: 'С помощью команды <code>bag.push("...")</code> положи в рюкзак <b>ещё минимум 2 новых предмета</b> (чтобы всего в рюкзаке стало 4 или больше сокровищ)!',
+    runes: [
+      { label: '💎 bag.push("кристалл");', snippet: '\nbag.push("кристалл");' },
+      { label: '🗺️ bag.push("карта");', snippet: '\nbag.push("карта");' },
+      { label: '🔑 bag.push("золотой ключ");', snippet: '\nbag.push("золотой ключ");' }
+    ],
+    hints: [
+      'Найди строчку <code>bag.push("зелье");</code> и сразу под ней напиши ещё две такие же команды с любыми своими сокровищами в кавычках!',
+      'Вставь после второй строчки:\n<code>bag.push("карта");\nbag.push("кольцо");</code>',
+      'let bag = ["меч", "щит"];\nbag.push("зелье");\nbag.push("карта сокровищ");\nbag.push("золотой ключ");\nconsole.log("Первый предмет:", bag[0]);\nconsole.log("Всего в сумке:", bag.length);\nfor (let item of bag) {\n  console.log("Предмет: " + item);\n}'
+    ],
+    templateCode: 'let bag = ["меч", "щит"];\nbag.push("зелье");\nbag.push("карта сокровищ");\nbag.push("золотой ключ");\nfor (let item of bag) {\n  console.log("Предмет: " + item);\n}',
+    verify: function(r) {
+      var noErr = !r.err;
+      var pushCount = (r.code.match(/\.push\s*\(/g) || []).length;
+      var itemsPrinted = r.out.filter(function(line) { return line.indexOf('Предмет:') === 0; }).length;
+      var enoughItems = noErr && (pushCount >= 3 || itemsPrinted >= 4);
+      return [
+        { ok: noErr, text: 'Код массива работает без ошибок' },
+        { ok: pushCount >= 2, text: 'Использована команда добавления сокровищ .push()' },
+        { ok: enoughItems, text: 'В сундуке собрано не менее 4 предметов' }
+      ];
     }
   },
   {
     ico: '🗼',
     name: 'Башня DOM',
     dom: 1,
-    story: 'На вершине башни растёт живое Дерево Страницы (DOM). Каждый заголовок, абзац и кнопка — это веточка! Справа ты видишь живое DOM-дерево сцены.',
-    learn: '<b>DOM (Document Object Model)</b> — это представление HTML-страницы в виде дерева объектов. Команда <code>document.querySelector("h2")</code> или <code>document.getElementById("btn")</code> находит элемент, <code>.textContent</code> меняет текст внутри него, а <code>.style.color</code> меняет цвет текста.',
+    story: 'На вершине Башни DOM растёт волшебное Дерево Веб-Страницы. Каждая веточка этого дерева — заголовок, текст или кнопка на экране!',
+    learn: '<b>DOM</b> — это живое дерево элементов страницы. Команда <code>document.querySelector("h2")</code> находит заголовок на Белой Сцене, свойство <code>.textContent = "..."</code> меняет его текст, а <code>.style.color = "..."</code> перекрашивает буквы!',
     code: 'let title = document.querySelector("h2");\ntitle.textContent = "Привет, мир!";\ntitle.style.color = "#d97706";\n\nlet p = document.createElement("p");\np.textContent = "Новая ветка дерева DOM!";\ndocument.body.appendChild(p);',
-    task: 'Измени текст заголовка <code>h2</code> на любой свой (отличный от «Привет, мир!») и нажми «Запустить».',
-    hint: 'let title = document.querySelector("h2");\ntitle.textContent = "Я Мастер Башни DOM!";\ntitle.style.color = "#10b981";\n\nlet p = document.createElement("p");\np.textContent = "Я создал этот абзац кодом!";\ndocument.body.appendChild(p);',
-    check: function(r) {
+    task: 'В строчке <code>title.textContent = "Привет, мир!";</code> замени слова «Привет, мир!» на <b>любой свой сказочный заголовок</b> и нажми «Проверить заклинание»!',
+    runes: [
+      { label: '👑 title.textContent = "Я Маг DOM!";', snippet: '\ntitle.textContent = "Я Маг DOM!";' },
+      { label: '🎨 title.style.color = "#10b981";', snippet: '\ntitle.style.color = "#10b981";' },
+      { label: '🌿 Создать <p>', snippet: '\nlet p2 = document.createElement("p");\np2.textContent = "Ещё одна ветка!";\ndocument.body.appendChild(p2);' }
+    ],
+    hints: [
+      'Посмотри на вторую строчку: <code>title.textContent = "Привет, мир!";</code>. Сотри слова внутри кавычек и напиши, например, <code>"Замок Чародея!"</code>.',
+      'Замени вторую строчку на:\n<code>title.textContent = "Башня покорена!";</code>',
+      'let title = document.querySelector("h2");\ntitle.textContent = "Я Повелитель Башни DOM!";\ntitle.style.color = "#10b981";\n\nlet p = document.createElement("p");\np.textContent = "Я сам вырастил эту ветку дерева!";\ndocument.body.appendChild(p);'
+    ],
+    templateCode: 'let title = document.querySelector("h2");\ntitle.textContent = "Королевство Магии!";\ntitle.style.color = "#10b981";',
+    verify: function(r) {
+      var noErr = !r.err;
       var h = r.stage ? r.stage.querySelector('h2') : null;
-      return !r.err && h && h.textContent.trim() !== '' && h.textContent.trim() !== 'Привет, мир!';
+      var foundH2 = noErr && !!h && /querySelector/.test(r.code);
+      var changedTitle = foundH2 && h.textContent.trim() !== '' && h.textContent.trim() !== 'Привет, мир!';
+      return [
+        { ok: noErr, text: 'Заклинание DOM выполнено без ошибок' },
+        { ok: foundH2, text: 'Найден элемент заголовка через document.querySelector("h2")' },
+        { ok: changedTitle, text: 'Текст заголовка на Белой Сцене изменён на твой собственный' }
+      ];
     }
   },
   {
     ico: '⚡',
     name: 'Остров Событий',
     dom: 1,
-    story: 'На этом острове предметы оживают от твоих действий: кликов мыши, нажатий клавиш, наведения курсора. В JavaScript это называется Событиями!',
-    learn: '<b>Событие (Event)</b> — сигнал от пользователя. Команда <code>btn.addEventListener("click", function() { ... })</code> назначает кнопке «слушателя»: каждый раз при клике будет срабатывать функция внутри.',
+    story: 'На Острове Событий заклинания срабатывают от прикосновения! Нажми на кнопку на Белой Сцене — и она оживёт прямо у тебя на глазах.',
+    learn: '<b>Событие (Event)</b> — это сигнал от игрока (например, клик мышкой <code>"click"</code>). Команда <code>btn.addEventListener("click", function() { ... })</code> учит кнопку слушать твои нажатия и выполнять команды внутри функции при каждом клике!',
     code: 'let btn = document.querySelector("#btn");\nlet count = 0;\nbtn.addEventListener("click", function () {\n  count++;\n  btn.textContent = "Нажато " + count + " раз";\n  console.log("Бум! Клик номер " + count);\n});',
-    task: '1) Нажми «▶ Запустить», чтобы оживить кнопку. 2) Затем <b>нажми на саму кнопку «Нажми меня» на Белой Сцене 3 раза</b>, наблюдая за живым журналом!',
-    hint: 'let btn = document.querySelector("#btn");\nlet count = 0;\nbtn.addEventListener("click", function () {\n  count++;\n  btn.textContent = "Супер-клик: " + count;\n  console.log("Магический клик №" + count);\n});',
-    check: function(r) {
-      // Засчитывается, когда в живом журнале появилось минимум 3 записи от клика ИЛИ текст кнопки изменился после 3 кликов!
-      return !r.err && /addEventListener\s*\(\s*["']click["']/.test(r.code) && r.out.length >= 3;
+    task: '1) Нажми <b>«▶ Запустить и Проверить»</b>, чтобы подключить магию к кнопке. 2) Затем <b>кликни 3 раза по самой жёлтой кнопке «Нажми меня» на Белой Сцене</b>!',
+    runes: [
+      { label: '⚡ addEventListener("click", ...)', snippet: '\nbtn.addEventListener("click", function() {\n  console.log("Клик!");\n});' },
+      { label: '🎨 Сменить цвет кнопки при клике', snippet: '\nbtn.style.backgroundColor = "#34d399";' }
+    ],
+    hints: [
+      'В этом уроке код уже правильный! Сначала нажми кнопку <b>«▶ Запустить и Проверить»</b>, а потом опусти взгляд чуть ниже на <b>Белую сцену</b> и нажми мышкой на кнопку <b>«Нажми меня»</b> 3 раза подряд!',
+      'Посмотри на блок «🎭 Белая сцена» под журналом. Нажимай на кнопку внутри Белой сцены, пока счётчик кликов не дойдёт до 3!',
+      'let btn = document.querySelector("#btn");\nlet count = 0;\nbtn.addEventListener("click", function () {\n  count++;\n  btn.textContent = "Магический клик: " + count;\n  console.log("Бум! Клик номер " + count);\n});'
+    ],
+    templateCode: 'let btn = document.querySelector("#btn");\nlet count = 0;\nbtn.addEventListener("click", function () {\n  count++;\n  btn.textContent = "Супер-клик: " + count;\n  console.log("Бум! Клик номер " + count);\n});',
+    verify: function(r) {
+      var noErr = !r.err;
+      var hasListener = noErr && /addEventListener\s*\(\s*["']click["']/.test(r.code);
+      var clicked3 = hasListener && r.out.length >= 3;
+      return [
+        { ok: noErr, text: 'Код обработчика событий запущен без ошибок' },
+        { ok: hasListener, text: 'Слушатель кликов addEventListener("click", ...) подключён к кнопке' },
+        { ok: clicked3, text: 'Нажми на кнопку на Белой Сцене 3 раза (нажато: ' + Math.min(3, r.out.length) + '/3)' }
+      ];
     }
   }
 ];
 
 /* ==========================================================================
-   ТЕСТ В ХРАМЕ ИСПЫТАНИЙ
+   ВОПРОСЫ ХРАМА ИСПЫТАНИЙ С ПОДСКАЗКАМИ МУДРЕЦА
    ========================================================================== */
 var Q = [
-  { q: 'Как создать переменную, значение которой можно менять?', o: ['let x = 5;', 'const x = 5;', 'fix x = 5;'], a: 0, e: 'Ключевое слово let создаёт изменяемую коробку для данных.' },
-  { q: 'Что покажет console.log(10 + 5)?', o: ['105', '15', '"10+5"'], a: 1, e: 'Числа без кавычек складываются математически: 10 + 5 = 15.' },
-  { q: 'Какой блок выполнится, если условие в if (...) оказалось ложным?', o: ['if', 'else', 'for'], a: 1, e: 'Блок else срабатывает как запасной путь, когда условие ложно.' },
-  { q: 'Сколько раз сработает цикл: for (let i = 0; i < 4; i++)?', o: ['3 раза', '4 раза', '5 раз'], a: 1, e: 'Переменная i примет значения 0, 1, 2, 3 — итого ровно 4 шага.' },
-  { q: 'С какого номера начинаются индексы элементов в массиве?', o: ['С нуля (0)', 'С единицы (1)', 'С минус единицы (-1)'], a: 0, e: 'В JavaScript счёт элементов массива всегда начинается с 0: bag[0].' },
-  { q: 'Что делает метод массива arr.push("меч")?', o: ['Удаляет первый элемент', 'Добавляет "меч" в конец массива', 'Сортирует массив по алфавиту'], a: 1, e: 'Метод .push() кладёт новый элемент в конец списка.' },
-  { q: 'Как правильно вызвать функцию с именем heal?', o: ['heal', 'heal()', 'call heal'], a: 1, e: 'Круглые скобки () после имени запускают выполнение функции.' },
-  { q: 'Что делает команда document.querySelector("#btn")?', o: ['Находит на странице элемент с id="btn"', 'Удаляет кнопку со страницы', 'Создаёт новую кнопку'], a: 0, e: 'querySelector("#btn") ищет элемент по CSS-селектору (решётка означает поиск по id).' },
-  { q: 'Какая команда Git сохраняет слепок проекта («точку сохранения») в истории?', o: ['git commit -m "Описание"', 'git status', 'git init'], a: 0, e: 'Команда git commit -m "..." создаёт новую точку сохранения с понятным комментарием.' },
-  { q: 'Что такое Node.js и для чего нужна команда npm install express?', o: ['Это графический редактор картинок', 'Среда запуска JS вне браузера и установка пакета веб-сервера Express', 'Команда для изменения цвета текста'], a: 1, e: 'Node.js позволяет запускать JS на сервере и компьютере, а npm устанавливает готовые библиотеки вроде Express!' }
+  { q: 'Как создать волшебную коробку (переменную), содержимое которой можно менять?', o: ['let x = 5;', 'const x = 5;', 'fix x = 5;'], a: 0, h: 'Слово const создаёт запертый сундук, а короткое слово из 3 букв разрешает менять значение!', e: 'Ключевое слово let создаёт изменяемую коробку для данных.' },
+  { q: 'Что выведет в журнал команда console.log(10 + 5)?', o: ['105', '15', '"10+5"'], a: 1, h: 'Числа написаны без кавычек, значит компьютер сложит их как на уроке математики!', e: 'Числа без кавычек складываются математически: 10 + 5 = 15.' },
+  { q: 'Какая ветка сработает, если условие внутри if (...) оказалось ложным (false)?', o: ['if', 'else', 'for'], a: 1, h: 'По-английски это слово переводится как «иначе»!', e: 'Блок else срабатывает как запасной путь, когда условие в if ложно.' },
+  { q: 'Сколько шагов сделает цикл: for (let i = 1; i <= 4; i++)?', o: ['3 шага', '4 шага', '5 шагов'], a: 1, h: 'Посчитай на пальцах числа от 1 до 4 включительно: 1, 2, 3, 4.', e: 'Переменная i примет значения 1, 2, 3 и 4 — ровно 4 шага.' },
+  { q: 'С какого номера всегда начинается счёт ячеек в массиве JavaScript?', o: ['С нуля (0)', 'С единицы (1)', 'С двойки (2)'], a: 0, h: 'Программисты начинают считать предметы в сундуке не с 1, а чуть раньше!', e: 'В JavaScript индексы элементов массива всегда начинаются с 0: bag[0].' },
+  { q: 'Что делает команда bag.push("зелье")?', o: ['Удаляет первый предмет', 'Добавляет "зелье" в конец массива bag', 'Очищает весь рюкзак'], a: 1, h: 'Слово push переводится как «протолкнуть / добавить внутрь»!', e: 'Метод .push() добавляет новый элемент в самый конец списка.' },
+  { q: 'Как правильно вызвать (запустить) функцию с именем heal?', o: ['heal', 'heal()', 'run heal'], a: 1, h: 'Чтобы заклинание функции сработало, после её имени обязательно нужны круглые скобки!', e: 'Круглые скобки () после имени запускают выполнение функции.' },
+  { q: 'Что делает команда document.querySelector("#btn")?', o: ['Находит на странице элемент с id="btn"', 'Удаляет кнопку со страницы', 'Перекрашивает экран'], a: 0, h: 'Значок решётки # в CSS и DOM всегда означает поиск по уникальному идентификатору id.', e: 'querySelector("#btn") находит на странице элемент с атрибутом id="btn".' },
+  { q: 'Какая команда Git делает «точку сохранения» в истории проекта?', o: ['git commit -m "Сейв"', 'git status', 'git init'], a: 0, h: 'Эта команда принимает комментарий после флага -m "..." и фиксирует слепок кода.', e: 'Команда git commit -m "..." создаёт новую точку сохранения с понятным описанием.' },
+  { q: 'Для чего нужна среда Node.js и команда npm install express?', o: ['Для рисования картинок', 'Для запуска JS вне браузера и установки веб-сервера Express', 'Для смены шрифта в браузере'], a: 1, h: 'Вспомни нашу Мельницу: мы запускали на ней настоящий сервер на порту 3000!', e: 'Node.js позволяет запускать JavaScript на сервере, а npm устанавливает пакеты вроде Express!' }
 ];
 
 /* ==========================================================================
@@ -648,10 +1104,12 @@ var Q = [
    ========================================================================== */
 var currentTab = 'map';
 var curLesson = 0;
+var activeHintTab = 0; // 0 = скрыто, 1 = Наводка, 2 = Шаблон, 3 = Решение
 var domObserver = null;
 var lastRunOut = [];
 
 function switchTab(tabName) {
+  MagicSound.playClick();
   currentTab = tabName;
   if (domObserver) {
     domObserver.disconnect();
@@ -683,72 +1141,92 @@ function fmt(a) {
 }
 
 /* ==========================================================================
-   1. КАРТА КОРОЛЕВСТВА И УРОКИ JS
+   1. КАРТА КОРОЛЕВСТВА (7 ЗЕМЕЛЬ С ПОКАЗАТЕЛЯМИ ГОТОВНОСТИ)
    ========================================================================== */
 function renderMap() {
   updateHeaderStats();
-  setMascot('Выбирай любую из 7 земель JavaScript! После прохождения загляни в <b>Мастерскую</b> — там мы соберём настоящую интерактивную карточку героя.');
+  setMascot('Выбирай любую из 7 сказочных земель JavaScript! В каждой земле тебя ждёт <b>Шкала готовности заклинания</b>, конструктор из волшебных рун и мой Свиток Подсказок!', 'normal');
 
   var html = '<div class="k-card mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">' +
     '<div>' +
-      '<h2 class="text-lg sm:text-xl font-bold mb-1">🗺️ Карта Королевства JavaScript</h2>' +
-      '<p class="text-sm" style="color:var(--mute)">Пройди все 7 сказочных локаций, освой переменные, циклы, функции и DOM-дерево, а затем испытай себя в Мастерской и Храме Испытаний!</p>' +
+      '<h2 class="text-lg sm:text-xl font-bold mb-1">🗺️ Карта Семи Земель JavaScript</h2>' +
+      '<p class="text-sm" style="color:var(--mute)">В каждом уроке выполняй 3 шага готовности! Если что-то не получается — не бойся нажимать «Проверить»: я сразу подскажу, что подправить.</p>' +
     '</div>' +
     '<div class="flex gap-2 shrink-0">' +
-      '<button class="k-btn text-sm" onclick="switchTab(\'workshop\')">🛠️ В Мастерскую →</button>' +
+      '<button class="k-btn text-sm" onclick="switchTab(\'workshop\')">🛠️ В Мастерскую Героя →</button>' +
     '</div>' +
   '</div>';
 
   html += '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">';
   L.forEach(function(l, i) {
     var isDone = !!state.done[i];
+    var readyPct = isDone ? 100 : (state.lessonReadiness[i] || 0);
     html += '<div class="k-card k-loc flex flex-col justify-between ' + (isDone ? 'done' : '') + '" onclick="openLesson(' + i + ')">' +
       '<div>' +
         '<div class="flex items-center justify-between mb-2">' +
           '<span class="text-4xl select-none">' + l.ico + '</span>' +
           '<span class="text-xs font-bold px-2.5 py-1 rounded-full ' + (isDone ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300') + '">' +
-            (isDone ? '✔ Пройдено' : 'Урок ' + (i + 1)) +
+            (isDone ? '🌟 100% Готово' : 'Готовность: ' + readyPct + '%') +
           '</span>' +
         '</div>' +
         '<h3 class="font-bold text-base mb-1">' + (i + 1) + '. ' + l.name + '</h3>' +
-        '<p class="text-xs line-clamp-2" style="color:var(--mute)">' + l.story + '</p>' +
+        '<p class="text-xs line-clamp-2 mb-3" style="color:var(--mute)">' + l.story + '</p>' +
       '</div>' +
-      '<div class="mt-3 pt-2 border-t flex items-center justify-between text-xs font-semibold" style="border-color:var(--line)">' +
-        '<span>' + (isDone ? 'Награда получена' : '+10 🪙 за квест') + '</span>' +
-        '<span class="text-amber-600 dark:text-amber-400">Открыть →</span>' +
+      '<div>' +
+        '<div class="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden mb-2">' +
+          '<div class="h-full transition-all duration-300 ' + (isDone ? 'bg-emerald-500' : 'bg-amber-500') + '" style="width:' + readyPct + '%"></div>' +
+        '</div>' +
+        '<div class="pt-1 flex items-center justify-between text-xs font-semibold">' +
+          '<span>' + (isDone ? '✔ Награда получена' : '🎁 +15 🪙 за 100%') + '</span>' +
+          '<span class="text-amber-600 dark:text-amber-400 font-bold">Войти →</span>' +
+        '</div>' +
       '</div>' +
     '</div>';
   });
 
-  // Карточка быстрого перехода в Мастерскую и Храм
+  // Карточка быстрого перехода в Мастерскую
+  var wsCount = Object.keys(state.workshopSteps).length;
+  var wsPct = Math.round((wsCount / 4) * 100);
   html += '<div class="k-card k-loc flex flex-col justify-between border-dashed" onclick="switchTab(\'workshop\')">' +
     '<div>' +
-      '<div class="flex items-center justify-between mb-2"><span class="text-4xl">🛠️</span><span class="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300">Бонус-проект</span></div>' +
+      '<div class="flex items-center justify-between mb-2"><span class="text-4xl">🛠️</span><span class="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300">Готовность: ' + wsPct + '%</span></div>' +
       '<h3 class="font-bold text-base mb-1">Мастерская Героя</h3>' +
-      '<p class="text-xs" style="color:var(--mute)">Пошаговая сборка интерактивной карточки персонажа со счётчиком уровней и инвентарём!</p>' +
+      '<p class="text-xs mb-3" style="color:var(--mute)">Самостоятельно собери живую карточку персонажа с прокачкой уровня и рюкзаком трофеев!</p>' +
     '</div>' +
-    '<div class="mt-3 pt-2 border-t text-xs font-bold text-amber-600 dark:text-amber-400" style="border-color:var(--line)">+40 🪙 за 4 шага →</div>' +
+    '<div>' +
+      '<div class="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden mb-2">' +
+        '<div class="h-full bg-purple-500" style="width:' + wsPct + '%"></div>' +
+      '</div>' +
+      '<div class="pt-1 text-xs font-bold text-amber-600 dark:text-amber-400">🎁 +40 🪙 за 4 шага →</div>' +
+    '</div>' +
   '</div>';
 
   html += '</div>';
 
-  // Блок быстрых карточек новых направлений (Git, Node, Figma)
-  html += '<h3 class="font-bold text-lg mt-6 mb-3">🚀 Новые гильдии и инструменты разработчика</h3>' +
+  // Карточки гильдий с их шкалами готовности
+  var gitPct = Math.min(100, Math.round((Object.keys(state.gitSteps).length / 5) * 100));
+  var nodePct = Math.min(100, Math.round((Object.keys(state.nodeChecks).length / 3) * 100));
+  var figPct = Math.min(100, Math.round((Object.keys(state.figmaChecks).length / 3) * 100));
+
+  html += '<h3 class="font-bold text-lg mt-6 mb-3">🏰 Магические Гильдии Разработчика (с заданиями и проверкой!)</h3>' +
     '<div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">' +
       '<div class="k-card k-loc" onclick="switchTab(\'git\')">' +
-        '<div class="text-3xl mb-2">🐙</div>' +
+        '<div class="flex justify-between items-center mb-2"><span class="text-3xl">🐙</span><span class="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-500/20">Миссия: ' + gitPct + '%</span></div>' +
         '<h4 class="font-bold mb-1">Кузница Git и GitHub</h4>' +
-        '<p class="text-xs" style="color:var(--mute)">Узнай, как делать «точки сохранения» кода и отправлять свои сайты в облачный замок GitHub в интерактивном терминале.</p>' +
+        '<p class="text-xs mb-2" style="color:var(--mute)">Пройди квест из 5 шагов сохранения кода и отправь проект в Облачный Замок GitHub!</p>' +
+        '<div class="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width:' + gitPct + '%"></div></div>' +
       '</div>' +
       '<div class="k-card k-loc" onclick="switchTab(\'node\')">' +
-        '<div class="text-3xl mb-2">🟢</div>' +
+        '<div class="flex justify-between items-center mb-2"><span class="text-3xl">🟢</span><span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20">Миссия: ' + nodePct + '%</span></div>' +
         '<h4 class="font-bold mb-1">Мельница Node.js и Сервер</h4>' +
-        '<p class="text-xs" style="color:var(--mute)">Разберись, что такое Node.js и npm, и запусти свой собственный игровой сервер на Express прямо в браузере!</p>' +
+        '<p class="text-xs mb-2" style="color:var(--mute)">Измени данные на сервере Королевства, перезапусти мотор Node.js и проверь секретные маршруты!</p>' +
+        '<div class="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-emerald-500" style="width:' + nodePct + '%"></div></div>' +
       '</div>' +
       '<div class="k-card k-loc" onclick="switchTab(\'figma\')">' +
-        '<div class="text-3xl mb-2">🎨</div>' +
-        '<h4 class="font-bold mb-1">Гильдия Figma (.fig в браузере)</h4>' +
-        '<p class="text-xs" style="color:var(--mute)">Научись открывать файлы .fig, узнавать размеры и цвета элементов и протестируй встроенный инспектор макетов!</p>' +
+        '<div class="flex justify-between items-center mb-2"><span class="text-3xl">🎨</span><span class="text-xs font-bold px-2 py-0.5 rounded-full bg-pink-500/20">Миссия: ' + figPct + '%</span></div>' +
+        '<h4 class="font-bold mb-1">Гильдия Figma (.fig)</h4>' +
+        '<p class="text-xs mb-2" style="color:var(--mute)">Выполни 3 задания Королевского Художника: исследуй слои, скопируй CSS и открой файл .fig!</p>' +
+        '<div class="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-pink-500" style="width:' + figPct + '%"></div></div>' +
       '</div>' +
     '</div>';
 
@@ -776,10 +1254,9 @@ function renderDomTreeHtml(node, depth) {
   return s;
 }
 
-/* Генерация интерактивной мини-визуализации для каждого урока */
+/* Генерация наглядной визуализации памяти/шагов для уроков */
 function buildLessonVisualizer(idx, outLines, codeStr) {
   if (idx === 0) {
-    // Визуальные коробки переменных
     var boxes = [];
     var reg = /(?:let|const)\s+(\w+)\s*=\s*([^;\n]+)/g;
     var m;
@@ -788,40 +1265,38 @@ function buildLessonVisualizer(idx, outLines, codeStr) {
     }
     if (!boxes.length) return '';
     var bHtml = boxes.map(function(b) {
-      return '<div class="px-3.5 py-2 rounded-xl border-2 bg-amber-500/10 flex flex-col items-center min-w-[110px]" style="border-color:var(--gold)">' +
+      return '<div class="px-3.5 py-2 rounded-xl border-2 bg-amber-500/10 flex flex-col items-center min-w-[110px] animate-pop" style="border-color:var(--gold)">' +
         '<span class="text-[11px] uppercase font-bold tracking-wider opacity-75">📦 ' + esc(b.name) + '</span>' +
         '<span class="font-mono font-bold text-sm mt-1">' + esc(b.val) + '</span>' +
       '</div>';
     }).join('');
     return '<div class="mt-3 p-3 rounded-xl bg-black/5 dark:bg-white/5">' +
-      '<div class="text-xs font-bold mb-2">🔍 Коробки переменных в памяти компьютера:</div>' +
+      '<div class="text-xs font-bold mb-2">🔍 Волшебные коробки переменных в памяти:</div>' +
       '<div class="flex flex-wrap gap-2.5">' + bHtml + '</div>' +
     '</div>';
   }
   if (idx === 2) {
-    // Визуализация шагов цикла
     var count = Math.min(15, outLines.length);
     var steps = '';
     for (var s = 1; s <= count; s++) {
-      steps += '<span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs bg-emerald-500 text-slate-950 shadow">👣' + s + '</span>';
+      steps += '<span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs bg-emerald-500 text-slate-950 shadow animate-pop">👣' + s + '</span>';
     }
     return '<div class="mt-3 p-3 rounded-xl bg-black/5 dark:bg-white/5">' +
-      '<div class="text-xs font-bold mb-2">⛰️ Пройденные шаги цикла (' + outLines.length + '):</div>' +
-      '<div class="flex flex-wrap gap-1.5">' + (steps || '<span class="text-xs opacity-60">Нажми «Запустить», чтобы увидеть шаги</span>') + '</div>' +
+      '<div class="text-xs font-bold mb-2">⛰️ Пройденные ступени горы (' + outLines.length + ' из 7 нужных):</div>' +
+      '<div class="flex flex-wrap gap-1.5">' + (steps || '<span class="text-xs opacity-60">Нажми «Запустить и Проверить», чтобы увидеть шаги</span>') + '</div>' +
     '</div>';
   }
   if (idx === 4) {
-    // Визуализация ячеек массива с индексами [0], [1]...
     var items = outLines.filter(function(l) { return l.indexOf('Предмет:') === 0; }).map(function(l) { return l.replace('Предмет:', '').trim(); });
     if (!items.length) return '';
     var cells = items.map(function(it, idxNum) {
-      return '<div class="px-3 py-2 rounded-xl border-2 bg-purple-500/10 text-center" style="border-color:var(--line)">' +
-        '<div class="text-[10px] font-mono opacity-70">индекс [' + idxNum + ']</div>' +
+      return '<div class="px-3 py-2 rounded-xl border-2 bg-purple-500/10 text-center animate-pop" style="border-color:var(--line)">' +
+        '<div class="text-[10px] font-mono opacity-70">ячейка [' + idxNum + ']</div>' +
         '<div class="font-bold text-sm mt-0.5">💎 ' + esc(it) + '</div>' +
       '</div>';
     }).join('');
     return '<div class="mt-3 p-3 rounded-xl bg-black/5 dark:bg-white/5">' +
-      '<div class="text-xs font-bold mb-2">🧳 Ячейки сундука-массива (нумерация с нуля!):</div>' +
+      '<div class="text-xs font-bold mb-2">🧳 Секции сундука-массива (нужно минимум 4):</div>' +
       '<div class="flex flex-wrap gap-2">' + cells + '</div>' +
     '</div>';
   }
@@ -829,50 +1304,100 @@ function buildLessonVisualizer(idx, outLines, codeStr) {
 }
 
 function openLesson(i) {
+  MagicSound.playClick();
   curLesson = i;
+  activeHintTab = 0;
   var l = L[i];
   updateHeaderStats();
-  setMascot('Ты в локации <b>«' + l.name + '»</b>. Внимательно прочитай свиток теории, измени код в редакторе и нажми <b>«▶ Запустить»</b>!');
+  setMascot('Ты в локации <b>«' + l.name + '»</b>! Прочитай задание, используй золотые <b>руны-конструктор</b> или пиши код сам, а затем жми <b>«▶ Запустить и Проверить»</b>!', 'normal');
 
   var html = '<div class="flex flex-wrap items-center justify-between gap-2 mb-3">' +
     '<button class="k-btn ghost text-sm" onclick="renderMap()">← На карту королевства</button>' +
     '<div class="flex items-center gap-1.5 flex-wrap">' +
       L.map(function(item, idx) {
-        var active = idx === i ? 'border-2 border-amber-500 font-bold' : 'opacity-70';
+        var active = idx === i ? 'border-2 border-amber-500 font-bold' : 'opacity-75';
         var doneCls = state.done[idx] ? 'bg-emerald-500/20' : 'bg-black/5 dark:bg-white/5';
         return '<button onclick="openLesson(' + idx + ')" class="px-2.5 py-1 rounded-lg text-xs ' + active + ' ' + doneCls + '" title="' + esc(item.name) + '">' + item.ico + ' ' + (idx + 1) + '</button>';
       }).join('') +
     '</div>' +
   '</div>';
 
+  // Свиток истории и теории
   html += '<div class="k-card mb-4">' +
     '<div class="flex items-center justify-between flex-wrap gap-2 mb-2">' +
-      '<h2 class="text-xl sm:text-2xl font-bold">' + l.ico + ' Урок ' + (i + 1) + '. ' + l.name + '</h2>' +
-      (state.done[i] ? '<span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-300">✔ Пройдено</span>' : '') +
+      '<h2 class="text-xl sm:text-2xl font-bold">' + l.ico + ' Земля ' + (i + 1) + '. ' + l.name + '</h2>' +
+      '<span id="lesson-status-pill" class="px-3 py-1 rounded-full text-xs font-bold ' + (state.done[i] ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300' : 'bg-amber-500/20 text-amber-700 dark:text-amber-300') + '">' +
+        (state.done[i] ? '🌟 Урок полностью пройден!' : '⏳ Испытание ждёт тебя') +
+      '</span>' +
     '</div>' +
     '<p class="italic text-sm mb-3" style="color:var(--mute)">«' + l.story + '»</p>' +
-    '<div class="p-3.5 rounded-xl border text-sm leading-relaxed" style="border-color:var(--line); background:rgba(217,138,22,0.07)">📖 ' + l.learn + '</div>' +
+    '<div class="p-3.5 rounded-xl border text-sm leading-relaxed" style="border-color:var(--line); background:rgba(217,138,22,0.08)">📖 ' + l.learn + '</div>' +
   '</div>';
 
+  // КАРТОЧКА ЗАДАНИЯ + ШКАЛА ГОТОВНОСТИ ЗАКЛИНАНИЯ + 3 УРОВНЯ ПОДСКАЗОК
+  html += '<div id="quest-card" class="k-card mb-4 border-l-8" style="border-left-color:var(--gold)">' +
+    '<div class="flex flex-wrap items-start justify-between gap-3 mb-3">' +
+      '<div class="flex-1">' +
+        '<div class="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-1">🎯 Твоё самостоятельное задание:</div>' +
+        '<div class="text-sm sm:text-base font-medium">' + l.task + '</div>' +
+      '</div>' +
+      '<div class="flex flex-wrap gap-1.5 shrink-0">' +
+        '<button id="hint-btn-1" class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="openHintLevel(1)">🕯️ Подсказка 1 (Идея)</button>' +
+        '<button id="hint-btn-2" class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="openHintLevel(2)">🧩 Подсказка 2 (Шаблон)</button>' +
+        '<button id="hint-btn-3" class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="openHintLevel(3)">👑 Подсказка 3 (Ответ)</button>' +
+      '</div>' +
+    '</div>' +
+
+    // Раскрывающийся Свиток Подсказок (3 уровня)
+    '<div id="hint-drawer" class="hidden mb-4 p-3.5 rounded-2xl border-2 animate-pop" style="border-color:var(--magic); background:var(--magic-light)"></div>' +
+
+    // Шкала готовности заклинания (0% - 100%) и 3 чекпоинта
+    '<div class="p-3.5 rounded-2xl border bg-black/5 dark:bg-white/5" style="border-color:var(--line)">' +
+      '<div class="flex items-center justify-between text-xs font-bold mb-1.5">' +
+        '<span>🔮 Шкала готовности твоего заклинания:</span>' +
+        '<span id="lesson-readiness-pct" class="text-sm font-extrabold text-amber-600 dark:text-amber-400">0%</span>' +
+      '</div>' +
+      '<div class="readiness-track mb-3">' +
+        '<div id="lesson-readiness-bar" class="readiness-fill" style="width: 0%"></div>' +
+      '</div>' +
+      '<div id="lesson-checkpoints" class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs"></div>' +
+    '</div>' +
+  '</div>';
+
+  // РЕДАКТОР КОДА + ВОЛШЕБНЫЕ РУНЫ-КОНСТРУКТОР
   html += '<div class="k-card mb-4">' +
-    '<div class="flex items-center justify-between mb-2">' +
-      '<label for="code" class="font-bold text-sm">💻 Волшебный редактор кода:</label>' +
-      '<div class="flex gap-2">' +
-        '<button class="k-btn text-sm !py-1.5 !px-3.5" onclick="runLessonCode()">▶ Запустить</button>' +
+    '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
+      '<label for="code" class="font-bold text-sm">💻 Волшебный свиток кода:</label>' +
+      '<div class="flex flex-wrap gap-2">' +
+        '<button class="k-btn green text-sm !py-1.5 !px-4" onclick="runLessonCode(true)">▶ Запустить и Проверить</button>' +
         '<button class="k-btn ghost text-xs !py-1.5 !px-3" onclick="resetLessonCode()">↺ Сбросить</button>' +
       '</div>' +
     '</div>' +
+
+    // Панель быстрых рун для ребёнка
+    '<div class="mb-2.5 p-2.5 rounded-xl border bg-amber-500/5" style="border-color:var(--line)">' +
+      '<div class="text-[11px] font-bold mb-1.5" style="color:var(--mute)">🪄 Волшебные руны-конструктор (нажми на руну, чтобы добавить кусочек кода в редактор):</div>' +
+      '<div class="flex flex-wrap gap-1.5">' +
+        l.runes.map(function(r, rIdx) {
+          return '<button type="button" class="rune-chip" onclick="insertRune(' + rIdx + ')">➕ ' + esc(r.label) + '</button>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
     '<textarea id="code" class="code-editor" spellcheck="false"></textarea>' +
+
     '<div id="error-helper" class="hidden mt-3 p-3.5 rounded-xl border-2 text-sm" style="border-color:var(--bad); background:var(--bad-light)"></div>' +
     '<div id="lesson-visualizer"></div>' +
+
     '<div class="mt-3">' +
-      '<div class="text-xs font-bold uppercase tracking-wider opacity-75">📜 Живой журнал (console.log):</div>' +
-      '<pre class="out-console" id="out">(нажми «▶ Запустить», чтобы выполнить код)</pre>' +
+      '<div class="text-xs font-bold uppercase tracking-wider opacity-75">📜 Королевский Журнал (console.log):</div>' +
+      '<pre class="out-console" id="out">(нажми «▶ Запустить и Проверить», чтобы испытать заклинание)</pre>' +
     '</div>' +
+
     (l.dom ?
       '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">' +
         '<div>' +
-          '<div class="text-xs font-bold uppercase tracking-wider opacity-75 mb-1.5">🎭 Белая сцена (интерактивная):</div>' +
+          '<div class="text-xs font-bold uppercase tracking-wider opacity-75 mb-1.5">🎭 Белая Сцена (живая страница):</div>' +
           '<div class="stage-box" id="stage"></div>' +
         '</div>' +
         '<div>' +
@@ -882,28 +1407,12 @@ function openLesson(i) {
       '</div>' : '') +
   '</div>';
 
-  // Карточка задания + безопасная подсказка без alert()
-  html += '<div class="k-card mb-4 border-l-8" style="border-left-color:var(--gold)">' +
-    '<div class="flex flex-wrap items-center justify-between gap-2">' +
-      '<div class="text-sm sm:text-base">🎯 <b>Задание урока:</b> ' + l.task + '</div>' +
-      '<button class="k-btn ghost text-xs !py-1.5 !px-3" onclick="toggleHintBox()">💡 Подсказка</button>' +
-    '</div>' +
-    '<div id="hint-box" class="hidden mt-3 p-3 rounded-xl border text-sm" style="border-color:var(--gold); background:var(--gold-light)">' +
-      '<div class="font-bold mb-1">✨ Пример правильного кода:</div>' +
-      '<pre class="p-2.5 rounded-lg bg-slate-900 text-amber-200 text-xs overflow-x-auto mb-2">' + esc(l.hint) + '</pre>' +
-      '<button class="k-btn text-xs !py-1 !px-3" onclick="applyHintCode()">🪄 Вставить этот пример в редактор</button>' +
-    '</div>' +
-    '<div id="res" class="mt-3 text-sm font-bold">' +
-      (state.done[i] ? '<span style="color:var(--acc)">✔ Задание этого урока уже выполнено! Можешь экспериментировать дальше.</span>' : '') +
-    '</div>' +
-  '</div>';
-
-  // Кнопки переходов внизу
+  // Кнопки навигации между уроками
   html += '<div class="flex justify-between items-center">' +
-    (i > 0 ? '<button class="k-btn ghost text-sm" onclick="openLesson(' + (i - 1) + ')">← Предыдущий урок</button>' : '<span></span>') +
+    (i > 0 ? '<button class="k-btn ghost text-sm" onclick="openLesson(' + (i - 1) + ')">← Предыдущая земля</button>' : '<span></span>') +
     (i < L.length - 1
-      ? '<button class="k-btn text-sm" onclick="openLesson(' + (i + 1) + ')">Дальше: ' + L[i + 1].name + ' →</button>'
-      : '<button class="k-btn green text-sm" onclick="switchTab(\'workshop\')">К Практическому модулю 🛠️ →</button>') +
+      ? '<button class="k-btn text-sm" onclick="openLesson(' + (i + 1) + ')">Следующая земля: ' + L[i + 1].name + ' →</button>'
+      : '<button class="k-btn green text-sm" onclick="switchTab(\'workshop\')">В Мастерскую Героя 🛠️ →</button>') +
   '</div>';
 
   $('app').innerHTML = html;
@@ -919,68 +1428,206 @@ function openLesson(i) {
     domObserver.observe(st, { childList: true, subtree: true, attributes: true, characterData: true });
     $('tree').innerHTML = renderDomTreeHtml(st, 0);
   }
+
+  // Начальная отрисовка чекпоинтов без штрафа за попытку
+  runLessonCode(false);
 }
 
-function toggleHintBox() {
-  var hb = $('hint-box');
-  if (hb) hb.classList.toggle('hidden');
+/* Вставка волшебной руны в редактор урока */
+function insertRune(runeIdx) {
+  MagicSound.playRune();
+  var l = L[curLesson];
+  var r = l.runes[runeIdx];
+  var ta = $('code');
+  if (!ta || !r) return;
+
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  var val = ta.value;
+  if (typeof start === 'number') {
+    ta.value = val.substring(0, start) + r.snippet + val.substring(end);
+    ta.selectionStart = ta.selectionEnd = start + r.snippet.length;
+  } else {
+    ta.value += r.snippet;
+  }
+  ta.focus();
+  toast('🪄 Руна добавлена! Теперь нажми «▶ Запустить и Проверить»');
+}
+
+/* Открытие одного из 3 уровней подсказок в уроке */
+function openHintLevel(lvl, isAutoTriggered) {
+  MagicSound.playHint();
+  var l = L[curLesson];
+  var drawer = $('hint-drawer');
+  if (!drawer) return;
+
+  if (activeHintTab === lvl && !isAutoTriggered) {
+    drawer.classList.add('hidden');
+    activeHintTab = 0;
+    return;
+  }
+  activeHintTab = lvl;
+  drawer.classList.remove('hidden');
+
+  for (var b = 1; b <= 3; b++) {
+    var btn = $('hint-btn-' + b);
+    if (btn) {
+      if (b === lvl) btn.classList.add('pulse-hint');
+      else btn.classList.remove('pulse-hint');
+    }
+  }
+
+  var titles = {
+    1: '🕯️ Свиток Подсказок · Уровень 1 (Наводящая мысль без спойлера)',
+    2: '🧩 Свиток Подсказок · Уровень 2 (Каркас заклинания с шаблоном)',
+    3: '👑 Свиток Подсказок · Уровень 3 (Золотое заклинание Архимага)'
+  };
+
+  var bodyHtml = '<div class="flex items-center justify-between gap-2 mb-1.5">' +
+    '<span class="font-bold text-xs sm:text-sm">' + titles[lvl] + '</span>' +
+    '<button class="text-xs opacity-70 hover:opacity-100 font-bold" onclick="openHintLevel(' + lvl + ')">✖ Закрыть</button>' +
+  '</div>';
+
+  if (lvl === 1) {
+    bodyHtml += '<div class="text-sm">' + l.hints[0] + '</div>' +
+      '<div class="mt-2 flex gap-2">' +
+        '<button class="k-btn magic text-xs !py-1 !px-3" onclick="openHintLevel(2, true)">Всё ещё трудно? Открыть Шаблон (Уровень 2) →</button>' +
+      '</div>';
+  } else if (lvl === 2) {
+    bodyHtml += '<div class="text-sm mb-2">' + l.hints[1] + '</div>' +
+      '<div class="flex flex-wrap gap-2">' +
+        '<button class="k-btn magic text-xs !py-1 !px-3" onclick="applyTemplateCode()">🧩 Вставить шаблон в редактор</button>' +
+        '<button class="k-btn ghost text-xs !py-1 !px-3" onclick="openHintLevel(3, true)">Показать готовый ответ (Уровень 3) →</button>' +
+      '</div>';
+  } else {
+    bodyHtml += '<div class="text-xs mb-1.5">Вот полное рабочее заклинание. Изучи его и нажми кнопку, чтобы вставить в редактор:</div>' +
+      '<pre class="p-2.5 rounded-xl bg-slate-900 text-amber-200 text-xs overflow-x-auto mb-2">' + esc(l.hints[2]) + '</pre>' +
+      '<button class="k-btn text-xs !py-1.5 !px-3.5" onclick="applyHintCode()">🪄 Вставить готовое заклинание и проверить</button>';
+  }
+
+  drawer.innerHTML = bodyHtml;
+}
+
+function applyTemplateCode() {
+  var l = L[curLesson];
+  if ($('code')) {
+    $('code').value = l.templateCode || l.hints[2];
+    MagicSound.playRune();
+    toast('🧩 Шаблон вставлен! Проверь его в действии.');
+    runLessonCode(true);
+  }
 }
 
 function applyHintCode() {
   var l = L[curLesson];
   if ($('code')) {
-    $('code').value = l.hint;
-    runLessonCode();
+    $('code').value = l.hints[2];
+    runLessonCode(true);
   }
 }
 
 function resetLessonCode() {
+  MagicSound.playClick();
   if ($('code')) {
     $('code').value = L[curLesson].code;
     $('out').textContent = '(код сброшен к начальному)';
     var eh = $('error-helper');
     if (eh) eh.classList.add('hidden');
+    runLessonCode(false);
   }
 }
 
-/* Выполнение кода урока с поддержкой ЖИВОГО console.log при кликах по сцене! */
-function evaluateLessonCheck(code, outArr, errObj, stageEl) {
+/* Вычисление 3 чекпоинтов, обновление Шкалы готовности и автоматический показ подсказок */
+function evaluateLessonCheck(code, outArr, errObj, stageEl, isUserAttempt) {
   var l = L[curLesson];
-  var ok = false;
-  try {
-    ok = l.check({
-      code: code,
-      out: outArr,
-      err: errObj,
-      stage: stageEl || document.createElement('div')
-    });
-  } catch (e) {}
+  var checks = l.verify({
+    code: code,
+    out: outArr,
+    err: errObj,
+    stage: stageEl || document.createElement('div')
+  });
 
-  var res = $('res');
-  if (!res) return;
+  var passedCount = 0;
+  checks.forEach(function(c) { if (c.ok) passedCount++; });
+  var pct = Math.round((passedCount / checks.length) * 100);
 
-  if (ok) {
+  // Сохраняем максимальную достигнутую готовность урока
+  if (!state.lessonReadiness[curLesson] || pct > state.lessonReadiness[curLesson]) {
+    state.lessonReadiness[curLesson] = pct;
+  }
+
+  var pctEl = $('lesson-readiness-pct');
+  var barEl = $('lesson-readiness-bar');
+  var cpEl = $('lesson-checkpoints');
+
+  if (pctEl) pctEl.textContent = pct + '% (' + passedCount + ' из ' + checks.length + ' проверок)';
+  if (barEl) barEl.style.width = pct + '%';
+
+  if (cpEl) {
+    cpEl.innerHTML = checks.map(function(c, idx) {
+      return '<div class="p-2.5 rounded-xl border flex items-start gap-2 transition-all ' +
+        (c.ok ? 'border-emerald-500 bg-emerald-500/15 font-semibold' : 'border-amber-500/40 bg-black/5 dark:bg-white/5 opacity-85') + '">' +
+        '<span class="text-base leading-none">' + (c.ok ? '✅' : '⭕') + '</span>' +
+        '<span><b>Шаг ' + (idx + 1) + ':</b> ' + c.text + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  if (pct === 100) {
+    MagicSound.playFanfare();
     if (!state.done[curLesson]) {
       state.done[curLesson] = 1;
-      addCoins(10, 'Урок «' + l.name + '» пройден!');
-      setMascot('Ура! 🎉 Ты блестяще справился с заданием локации <b>«' + l.name + '»</b> и заработал +10 золотых монет!');
-    }
-    res.innerHTML = '<span style="color:var(--acc)">✔ Отлично! Задание полностью выполнено!</span>';
-  } else {
-    if (curLesson === 6 && !errObj && /addEventListener/.test(code)) {
-      var clicksLeft = Math.max(0, 3 - outArr.length);
-      res.innerHTML = '<span class="text-amber-600 dark:text-amber-400">⚡ Код запущен! Теперь нажми на кнопку «Нажми меня» на Белой Сцене ещё ' + clicksLeft + ' раз(а)!</span>';
+      addCoins(15, 'Земля «' + l.name + '» пройдена на 100%!');
     } else {
-      res.innerHTML = state.done[curLesson]
-        ? '<span style="color:var(--acc)">✔ Урок уже зачтён (попробуй выполнить условие снова).</span>'
-        : '<span style="color:var(--bad)">Пока условие задания не выполнено — прочитай подсказку или измени код!</span>';
+      saveState();
+    }
+    var pill = $('lesson-status-pill');
+    if (pill) {
+      pill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-300';
+      pill.textContent = '🌟 100% Готово!';
+    }
+    setMascot('Ура! 🎉 Все 3 проверки пройдены, <b>Шкала готовности достигла 100%</b>! Ты настоящий волшебник кода!', 'star');
+  } else if (isUserAttempt) {
+    // Особый случай для урока 7: код правильный, ждём 3 кликов по кнопке на Белой Сцене
+    if (curLesson === 6 && checks[0].ok && checks[1].ok && !checks[2].ok) {
+      MagicSound.playHint();
+      var left = Math.max(0, 3 - outArr.length);
+      setMascot('⚡ Заклинание работает! Теперь <b>нажми мышкой ' + left + ' раз(а) на саму кнопку «Нажми меня» на Белой Сцене</b> внизу!', 'happy');
+      return;
+    }
+
+    // Если у ребёнка не получилось — увеличиваем счётчик попыток и включаем умную подсказку!
+    state.lessonAttempts[curLesson] = (state.lessonAttempts[curLesson] || 0) + 1;
+    var attempts = state.lessonAttempts[curLesson];
+    saveState();
+
+    MagicSound.playError();
+    var qc = $('quest-card');
+    if (qc) {
+      qc.classList.remove('shake-box');
+      void qc.offsetWidth;
+      qc.classList.add('shake-box');
+    }
+
+    // Находим первый невыполненный шаг
+    var firstFailed = checks.find(function(c) { return !c.ok; });
+    var failMsg = firstFailed ? firstFailed.text : 'Проверь условие задания';
+
+    if (attempts === 1) {
+      openHintLevel(1, true);
+      setMascot('Ничего страшного, у каждого мага бывают осечки! 🐾 Обрати внимание на пункт: <b>«' + failMsg + '»</b>. Я уже открыл для тебя <b>Подсказку 1</b>!', 'oops');
+    } else if (attempts === 2) {
+      openHintLevel(2, true);
+      setMascot('Давай разберёмся вместе! 🧙‍♂️ Я открыл для тебя <b>Подсказку 2 с готовым шаблоном</b> — можешь вставить его одной кнопкой!', 'hint');
+    } else {
+      openHintLevel(3, true);
+      setMascot('Я открыл <b>Золотой Свиток Архимага (Подсказка 3)</b>! Нажми кнопку <b>«🪄 Вставить готовое заклинание»</b>, чтобы увидеть, как оно работает!', 'hint');
     }
   }
 }
 
-function runLessonCode() {
-  var l = L[curLesson];
-  var code = $('code').value;
+function runLessonCode(isUserAttempt) {
+  var code = $('code') ? $('code').value : '';
   lastRunOut = [];
   var err = null;
   var st = $('stage');
@@ -991,29 +1638,28 @@ function runLessonCode() {
     st.innerHTML = BASE_STAGE_HTML;
   }
 
-  function updateConsoleView() {
+  function updateConsoleView(fromClickEvent) {
     var outEl = $('out');
     if (outEl) {
-      outEl.textContent = lastRunOut.join('\n') || '(пусто — добавь console.log)';
+      outEl.textContent = lastRunOut.join('\n') || '(в журнале пока пусто — используй console.log)';
       outEl.scrollTop = outEl.scrollHeight;
     }
     var visEl = $('lesson-visualizer');
     if (visEl) {
       visEl.innerHTML = buildLessonVisualizer(curLesson, lastRunOut, code);
     }
-    evaluateLessonCheck(code, lastRunOut, err, st);
+    evaluateLessonCheck(code, lastRunOut, err, st, fromClickEvent ? true : isUserAttempt);
   }
 
-  // Живая консоль: работает и синхронно, и асинхронно при кликах на кнопку в уроке 7!
   var customConsole = {
     log: function() {
       var line = [].slice.call(arguments).map(fmt).join(' ');
       lastRunOut.push(line);
-      updateConsoleView();
+      MagicSound.playClick();
+      updateConsoleView(true);
     }
   };
 
-  // Полная безопасная песочница document для сцены
   var customDoc = {
     querySelector: function(s) { return st ? st.querySelector(s) : null; },
     querySelectorAll: function(s) { return st ? st.querySelectorAll(s) : []; },
@@ -1030,25 +1676,25 @@ function runLessonCode() {
     lastRunOut.push('⚠️ Ошибка: ' + e.message);
     if (eh) {
       eh.classList.remove('hidden');
-      eh.innerHTML = '<div class="font-bold mb-1">🩺 Детский переводчик ошибок:</div>' +
+      eh.innerHTML = '<div class="font-bold mb-1">🩺 Добрый переводчик ошибок Кота Басика:</div>' +
         '<div>' + translateJsError(e) + '</div>';
     }
   }
 
-  updateConsoleView();
+  updateConsoleView(false);
 }
 
 /* ==========================================================================
-   2. ОТДЕЛЬНЫЙ ПРАКТИЧЕСКИЙ МОДУЛЬ («МАСТЕРСКАЯ ГЕРОЯ»)
+   2. МАСТЕРСКАЯ ГЕРОЯ (САМОСТОЯТЕЛЬНАЯ СБОРКА + ШКАЛА ГОТОВНОСТИ + ПОДСКАЗКИ)
    ========================================================================== */
 var WORKSHOP_STARTER =
-'// === ШАГ 1: Находим элементы карточки ===\n' +
+'// === ШАГ 1: Находим элементы карточки на странице ===\n' +
 'const nameEl = document.querySelector("#hero-name");\n' +
 'const roleEl = document.querySelector("#hero-role");\n' +
 'const lvlEl = document.querySelector("#hero-lvl");\n' +
 'const rankEl = document.querySelector("#hero-rank");\n' +
 'const listEl = document.querySelector("#quest-list");\n\n' +
-'// === ШАГ 2: Меняем имя и класс героя из полей ввода ===\n' +
+'// === ШАГ 2: Меняем имя и класс героя по клику на кнопку ===\n' +
 'const saveBtn = document.querySelector("#save-hero-btn");\n' +
 'const nameInput = document.querySelector("#input-name");\n' +
 'const roleInput = document.querySelector("#input-role");\n\n' +
@@ -1059,20 +1705,29 @@ var WORKSHOP_STARTER =
 '  roleEl.textContent = roleInput.value;\n' +
 '  console.log("Герой обновлён:", nameEl.textContent);\n' +
 '});\n\n' +
-'// === ШАГ 3: Прокачка уровня и звания (if / else) ===\n' +
+'// === ШАГ 3: Прокачка уровня и звания (допиши сам или используй подсказку!) ===\n' +
 'let level = 1;\n' +
 'const lvlBtn = document.querySelector("#lvl-btn");\n' +
-'// Допиши обработчик клика для lvlBtn ниже:\n\n' +
-'// === ШАГ 4: Добавление трофея в инвентарь ===\n' +
+'// Когда нажимают на lvlBtn: увеличь level на 1, запиши в lvlEl.textContent,\n' +
+'// а если level >= 5, запиши в rankEl.textContent слова "⚔️ Рыцарь Кода"\n\n' +
+'// === ШАГ 4: Добавление трофея в рюкзак (допиши сам или используй подсказку!) ===\n' +
 'const addBtn = document.querySelector("#add-item-btn");\n' +
 'const itemInput = document.querySelector("#input-item");\n' +
-'// Допиши обработчик добавления предмета <li> ниже:\n';
+'// Когда нажимают на addBtn: создай тег document.createElement("li"),\n' +
+'// запиши туда itemInput.value и прикрепи к списку listEl.appendChild(li)\n';
 
 var WORKSHOP_STEP_SOLUTIONS = {
   1: '// === ШАГ 1: Находим элементы карточки ===\nconst nameEl = document.querySelector("#hero-name");\nconst roleEl = document.querySelector("#hero-role");\nconst lvlEl = document.querySelector("#hero-lvl");\nconst rankEl = document.querySelector("#hero-rank");\nconst listEl = document.querySelector("#quest-list");',
   2: '// === ШАГ 2: Меняем имя и класс героя ===\nconst saveBtn = document.querySelector("#save-hero-btn");\nconst nameInput = document.querySelector("#input-name");\nconst roleInput = document.querySelector("#input-role");\nsaveBtn.addEventListener("click", function() {\n  if (nameInput.value.trim() !== "") {\n    nameEl.textContent = nameInput.value;\n  }\n  roleEl.textContent = roleInput.value;\n  console.log("Герой обновлён:", nameEl.textContent);\n});',
   3: '// === ШАГ 3: Прокачка уровня и проверка звания ===\nlet level = 1;\nconst lvlBtn = document.querySelector("#lvl-btn");\nlvlBtn.addEventListener("click", function() {\n  level = level + 1;\n  lvlEl.textContent = level;\n  if (level >= 5) {\n    rankEl.textContent = "⚔️ Рыцарь Кода";\n  } else {\n    rankEl.textContent = "🌱 Ученик Гильдии";\n  }\n  console.log("Уровень повышен до " + level);\n});',
   4: '// === ШАГ 4: Добавление предмета в инвентарь ===\nconst addBtn = document.querySelector("#add-item-btn");\nconst itemInput = document.querySelector("#input-item");\naddBtn.addEventListener("click", function() {\n  const li = document.createElement("li");\n  li.textContent = "💎 " + (itemInput.value || "Магический свиток");\n  listEl.appendChild(li);\n  console.log("Добавлен трофей:", li.textContent);\n});'
+};
+
+var WORKSHOP_STEP_HINTS = {
+  1: 'В Шаге 1 мы ищем элементы карточки через <code>document.querySelector("#hero-name")</code> и другие id. Они уже написаны в начале кода — главное не удаляй их!',
+  2: 'В Шаге 2 при клике на <code>saveBtn</code> мы берём введённое имя из <code>nameInput.value</code> и записываем его в <code>nameEl.textContent</code>.',
+  3: 'Для Шага 3 добавь слушатель клика:\n<code>lvlBtn.addEventListener("click", function() {\n  level = level + 1;\n  lvlEl.textContent = level;\n  if (level >= 5) { rankEl.textContent = "⚔️ Рыцарь Кода"; }\n});</code>',
+  4: 'Для Шага 4 создай элемент списка <code>li</code> и прикрепи его к <code>listEl</code>:\n<code>addBtn.addEventListener("click", function() {\n  const li = document.createElement("li");\n  li.textContent = "💎 " + itemInput.value;\n  listEl.appendChild(li);\n});</code>'
 };
 
 function getFullWorkshopSolution() {
@@ -1112,59 +1767,77 @@ var WORKSHOP_STAGE_TEMPLATE =
         '</select>' +
       '</div>' +
       '<div class="sm:col-span-2 flex flex-wrap gap-2 pt-1">' +
-        '<button id="save-hero-btn" class="px-3 py-1.5 rounded-lg font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 transition">💾 Сохранить героя</button>' +
-        '<button id="lvl-btn" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition">⬆️ Прокачать уровень (+1)</button>' +
+        '<button id="save-hero-btn" class="px-3 py-1.5 rounded-lg font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 transition shadow-sm">💾 Сохранить героя</button>' +
+        '<button id="lvl-btn" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition shadow-sm">⬆️ Прокачать уровень (+1)</button>' +
       '</div>' +
     '</div>' +
 
     '<div class="p-2.5 rounded-xl bg-white/90 border border-amber-200 text-xs">' +
-      '<div class="font-bold text-slate-700 mb-1.5">🎒 Инвентарь и выполненные квесты:</div>' +
+      '<div class="font-bold text-slate-700 mb-1.5">🎒 Инвентарь и трофеи героя:</div>' +
       '<ul id="quest-list" class="list-disc list-inside space-y-1 text-slate-800 mb-2 font-medium">' +
         '<li>🗡️ Деревянный посох кода</li>' +
       '</ul>' +
       '<div class="flex gap-1.5">' +
         '<input id="input-item" type="text" value="Кристалл DOM" class="flex-1 px-2.5 py-1 rounded-lg border border-slate-300 bg-white text-slate-900" placeholder="Название предмета..." />' +
-        '<button id="add-item-btn" class="px-3 py-1 rounded-lg font-bold bg-purple-600 hover:bg-purple-500 text-white transition">➕ В рюкзак</button>' +
+        '<button id="add-item-btn" class="px-3 py-1 rounded-lg font-bold bg-purple-600 hover:bg-purple-500 text-white transition shadow-sm">➕ В рюкзак</button>' +
       '</div>' +
     '</div>' +
   '</div>';
 
 function renderWorkshop() {
   updateHeaderStats();
-  setMascot('Добро пожаловать в <b>Мастерскую</b>! Здесь мы по шагам соберём настоящий мини-проект: «Интерактивную Карточку Героя». Если запутаешься — нажми кнопку <b>«🪄 Вставить готовый код всех 4 шагов»</b>, и мы разберём каждую строчку!');
+  setMascot('Добро пожаловать в <b>Мастерскую Героя</b>! Здесь Шаги 1 и 2 уже подключены для примера, а <b>Шаги 3 и 4 ты можешь собрать сам</b>! Если не получается — нажми «💡 Подсказка» на нужном шаге.', 'normal');
 
   var stepsInfo = [
-    { n: 1, title: 'Шаг 1: Находим элементы DOM', desc: 'Связываем переменные с элементами карточки (#hero-name, #hero-role, #hero-lvl, #hero-rank, #quest-list) через document.querySelector.' },
-    { n: 2, title: 'Шаг 2: Меняем имя и класс героя', desc: 'По клику на кнопку #save-hero-btn берём текст из поля ввода #input-name (.value) и записываем в заголовок #hero-name (.textContent).' },
-    { n: 3, title: 'Шаг 3: Прокачка уровня и звание (if / else)', desc: 'По клику на #lvl-btn увеличиваем переменную level на 1. Если level >= 5, меняем текст #hero-rank на «⚔️ Рыцарь Кода»!' },
-    { n: 4, title: 'Шаг 4: Добавление трофея в рюкзак', desc: 'По клику на #add-item-btn создаём новый элемент document.createElement("li"), записываем в него текст и прикрепляем в #quest-list через appendChild.' }
+    { n: 1, title: 'Шаг 1: Связь с DOM', desc: 'Находим элементы карточки через querySelector (#hero-name, #hero-lvl, #quest-list).' },
+    { n: 2, title: 'Шаг 2: Смена имени', desc: 'По клику на #save-hero-btn меняем имя героя на текст из поля #input-name.' },
+    { n: 3, title: 'Шаг 3: Прокачка уровня', desc: 'По клику на #lvl-btn увеличиваем level на 1 и на 5-м уровне даём звание «⚔️ Рыцарь Кода».' },
+    { n: 4, title: 'Шаг 4: Рюкзак трофеев', desc: 'По клику на #add-item-btn создаём элемент <li> и добавляем его в список #quest-list.' }
   ];
+
+  var doneCount = Object.keys(state.workshopSteps).length;
+  var pct = Math.round((doneCount / 4) * 100);
 
   var html = '<div class="k-card mb-4">' +
     '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
       '<div>' +
-        '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300">Практический модуль</span>' +
+        '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300">Самостоятельный проект</span>' +
         '<h2 class="text-xl sm:text-2xl font-bold mt-1">🛠️ Мастерская: Собери Интерактивную Карточку Героя</h2>' +
       '</div>' +
-      '<button class="k-btn text-xs sm:text-sm" onclick="fillFullWorkshopCode()">🪄 Вставить эталонное решение всех 4 шагов</button>' +
+      '<button class="k-btn magic text-xs sm:text-sm" onclick="fillFullWorkshopCode()">👑 Свиток Архимага (собрать все 4 шага)</button>' +
     '</div>' +
-    '<p class="text-sm" style="color:var(--mute)">В этом задании ты объединишь все знания: переменные, условия <code>if/else</code>, поиск элементов <code>querySelector</code>, чтение полей ввода <code>.value</code> и создание новых тегов <code>createElement</code>. Выполняй шаги по порядку!</p>' +
 
-    '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-4" id="workshop-checklist">' +
+    // Шкала готовности проекта Мастерской
+    '<div class="p-3.5 rounded-2xl border bg-black/5 dark:bg-white/5 my-3" style="border-color:var(--line)">' +
+      '<div class="flex items-center justify-between text-xs font-bold mb-1.5">' +
+        '<span>🔮 Шкала готовности Карточки Героя:</span>' +
+        '<span id="ws-readiness-label" class="text-sm font-extrabold text-amber-600 dark:text-amber-400">' + pct + '% (' + doneCount + ' из 4 шагов)</span>' +
+      '</div>' +
+      '<div class="readiness-track">' +
+        '<div id="ws-readiness-bar" class="readiness-fill" style="width:' + pct + '%"></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3" id="workshop-checklist">' +
       stepsInfo.map(function(s) {
         var done = !!state.workshopSteps[s.n];
-        return '<div class="p-3 rounded-xl border-2 flex flex-col justify-between ' + (done ? 'border-emerald-500 bg-emerald-500/10' : '') + '" style="' + (!done ? 'border-color:var(--line)' : '') + '">' +
+        return '<div id="ws-card-' + s.n + '" class="p-3 rounded-xl border-2 flex flex-col justify-between transition-all ' + (done ? 'border-emerald-500 bg-emerald-500/10' : '') + '" style="' + (!done ? 'border-color:var(--line)' : '') + '">' +
           '<div>' +
             '<div class="flex items-center justify-between font-bold text-xs mb-1">' +
               '<span>' + s.title + '</span>' +
-              '<span id="ws-badge-' + s.n + '">' + (done ? '✅' : '⏳') + '</span>' +
+              '<span id="ws-badge-' + s.n + '" class="text-base">' + (done ? '✅' : '⭕') + '</span>' +
             '</div>' +
-            '<p class="text-xs opacity-80">' + s.desc + '</p>' +
+            '<p class="text-xs opacity-80 mb-2">' + s.desc + '</p>' +
           '</div>' +
-          '<button class="k-btn ghost text-[11px] !py-1 !px-2 mt-2 w-full justify-center" onclick="insertWorkshopStep(' + s.n + ')">➕ Вставить код шага ' + s.n + '</button>' +
+          '<div class="flex gap-1.5 mt-1">' +
+            '<button class="k-btn ghost text-[11px] !py-1 !px-2 flex-1 justify-center" onclick="showWorkshopHint(' + s.n + ')">💡 Подсказка</button>' +
+            '<button class="k-btn text-[11px] !py-1 !px-2 flex-1 justify-center" onclick="insertWorkshopStep(' + s.n + ')">🪄 Вставить шаг ' + s.n + '</button>' +
+          '</div>' +
         '</div>';
       }).join('') +
     '</div>' +
+
+    '<div id="ws-hint-box" class="hidden mt-3 p-3.5 rounded-2xl border-2 animate-pop text-xs sm:text-sm" style="border-color:var(--magic); background:var(--magic-light)"></div>' +
   '</div>';
 
   html += '<div class="grid grid-cols-1 lg:grid-cols-12 gap-4">' +
@@ -1186,12 +1859,12 @@ function renderWorkshop() {
 
     '<div class="lg:col-span-5 k-card flex flex-col justify-between">' +
       '<div>' +
-        '<div class="font-bold text-sm mb-2">🎭 Живой макет Карточки Героя:</div>' +
-        '<p class="text-xs mb-3" style="color:var(--mute)">После запуска кода ты можешь сам нажимать на кнопки карточки ниже или доверить это автопроверке!</p>' +
+        '<div class="font-bold text-sm mb-1">🎭 Живой макет Карточки Героя:</div>' +
+        '<p class="text-xs mb-3" style="color:var(--mute)">Испытай карточку своими руками или нажми кнопку автопроверки!</p>' +
         '<div id="ws-stage">' + WORKSHOP_STAGE_TEMPLATE + '</div>' +
       '</div>' +
-      '<div id="ws-report" class="mt-4 p-3 rounded-xl border text-xs space-y-1" style="border-color:var(--line)">' +
-        '💡 Нажми <b>«🚀 Запустить и Проверить все 4 шага»</b>, чтобы протестировать карточку.' +
+      '<div id="ws-report" class="mt-4 p-3.5 rounded-xl border text-xs space-y-1.5" style="border-color:var(--line)">' +
+        '💡 Нажми <b>«🚀 Запустить и Проверить все 4 шага»</b>, чтобы робот-экзаменатор протестировал твою карточку!' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -1201,7 +1874,22 @@ function renderWorkshop() {
   runWorkshopCode(false);
 }
 
+function showWorkshopHint(stepNum) {
+  MagicSound.playHint();
+  var box = $('ws-hint-box');
+  if (!box) return;
+  box.classList.remove('hidden');
+  box.innerHTML =
+    '<div class="flex items-center justify-between mb-1">' +
+      '<span class="font-bold">🕯️ Подсказка Кота Басика для Шага ' + stepNum + ':</span>' +
+      '<button class="text-xs font-bold opacity-70 hover:opacity-100" onclick="$(\'ws-hint-box\').classList.add(\'hidden\')">✖ Закрыть</button>' +
+    '</div>' +
+    '<div class="mb-2">' + WORKSHOP_STEP_HINTS[stepNum] + '</div>' +
+    '<button class="k-btn text-xs !py-1 !px-3" onclick="insertWorkshopStep(' + stepNum + ')">🪄 Вставить готовый код Шага ' + stepNum + '</button>';
+}
+
 function insertWorkshopStep(stepNum) {
+  MagicSound.playRune();
   var ta = $('ws-code');
   if (!ta) return;
   if (stepNum === 3 || stepNum === 4) {
@@ -1210,11 +1898,12 @@ function insertWorkshopStep(stepNum) {
     ta.value = getFullWorkshopSolution();
   }
   window._savedWsCode = ta.value;
-  toast('Код шага ' + stepNum + ' добавлен в редактор!');
+  toast('🪄 Код шага ' + stepNum + ' добавлен в редактор!');
   runWorkshopCode(true);
 }
 
 function fillFullWorkshopCode() {
+  MagicSound.playFanfare();
   var ta = $('ws-code');
   if (!ta) return;
   ta.value = getFullWorkshopSolution();
@@ -1223,6 +1912,7 @@ function fillFullWorkshopCode() {
 }
 
 function resetWorkshopCode() {
+  MagicSound.playClick();
   var ta = $('ws-code');
   if (!ta) return;
   ta.value = WORKSHOP_STARTER;
@@ -1270,13 +1960,10 @@ function runWorkshopCode(runAutoTests) {
 
   if (!runAutoTests) return;
 
-  // Автопроверка 4 шагов
   var results = { 1: false, 2: false, 3: false, 4: false };
   if (!execError) {
-    // Шаг 1: найдены ключевые элементы
     results[1] = /#hero-name/.test(code) && /#hero-lvl/.test(code) && /#quest-list/.test(code);
 
-    // Шаг 2: симулируем смену имени
     var nameInp = stage.querySelector('#input-name');
     var saveBtn = stage.querySelector('#save-hero-btn');
     var heroName = stage.querySelector('#hero-name');
@@ -1286,7 +1973,6 @@ function runWorkshopCode(runAutoTests) {
       if (heroName.textContent.trim() === 'Гэндальф') results[2] = true;
     }
 
-    // Шаг 3: симулируем 4 клика по кнопке прокачки уровня (до 5 уровня)
     var lvlBtn = stage.querySelector('#lvl-btn');
     var lvlSpan = stage.querySelector('#hero-lvl');
     var rankSpan = stage.querySelector('#hero-rank');
@@ -1297,7 +1983,6 @@ function runWorkshopCode(runAutoTests) {
       }
     }
 
-    // Шаг 4: симулируем клик по кнопке добавления предмета
     var addBtn = stage.querySelector('#add-item-btn');
     var listEl = stage.querySelector('#quest-list');
     if (addBtn && listEl) {
@@ -1309,32 +1994,61 @@ function runWorkshopCode(runAutoTests) {
   }
 
   var newlyCompleted = 0;
+  var passedNow = 0;
+  var firstMissingStep = 0;
   for (var s = 1; s <= 4; s++) {
-    if (results[s] && !state.workshopSteps[s]) {
-      state.workshopSteps[s] = true;
-      newlyCompleted++;
+    if (results[s]) {
+      passedNow++;
+      if (!state.workshopSteps[s]) {
+        state.workshopSteps[s] = true;
+        newlyCompleted++;
+      }
+    } else if (!firstMissingStep) {
+      firstMissingStep = s;
     }
     var b = $('ws-badge-' + s);
-    if (b) b.textContent = state.workshopSteps[s] ? '✅' : '⏳';
+    if (b) b.textContent = results[s] ? '✅' : '⭕';
+    var cardEl = $('ws-card-' + s);
+    if (cardEl) {
+      cardEl.className = 'p-3 rounded-xl border-2 flex flex-col justify-between transition-all ' +
+        (results[s] ? 'border-emerald-500 bg-emerald-500/10' : '');
+    }
   }
+
+  var pct = Math.round((passedNow / 4) * 100);
+  var bar = $('ws-readiness-bar');
+  var lbl = $('ws-readiness-label');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = pct + '% (' + passedNow + ' из 4 шагов)';
 
   if (newlyCompleted > 0) {
     addCoins(newlyCompleted * 10, 'Шаги Мастерской выполнены!');
+  } else {
+    saveState();
+  }
+
+  if (passedNow === 4) {
+    MagicSound.playFanfare();
+    setMascot('Браво! 🎉 Карточка Героя готова на <b>100%</b>! Все 4 механизма работают безупречно!', 'star');
+  } else {
+    MagicSound.playHint();
+    showWorkshopHint(firstMissingStep || 3);
+    setMascot('Готовность карточки: <b>' + pct + '%</b>. Давай доделаем <b>Шаг ' + (firstMissingStep || 3) + '</b>! Я уже открыл подсказку для него над редактором.', 'hint');
   }
 
   var rep = $('ws-report');
   if (rep) {
     rep.innerHTML =
-      '<div class="font-bold mb-1">📊 Результат проверки Мастерской:</div>' +
-      '<div>' + (results[1] ? '✅' : '❌') + ' <b>Шаг 1:</b> Поиск элементов карточки</div>' +
-      '<div>' + (results[2] ? '✅' : '❌') + ' <b>Шаг 2:</b> Обновление имени героя по кнопке</div>' +
-      '<div>' + (results[3] ? '✅' : '❌') + ' <b>Шаг 3:</b> Прокачка до 5 уровня и звание «⚔️ Рыцарь Кода»</div>' +
-      '<div>' + (results[4] ? '✅' : '❌') + ' <b>Шаг 4:</b> Добавление нового предмета <code>&lt;li&gt;</code> в рюкзак</div>';
+      '<div class="font-bold mb-1">📊 Отчёт автопроверки Мастерской (' + pct + '%):</div>' +
+      '<div>' + (results[1] ? '✅' : '⭕') + ' <b>Шаг 1:</b> Поиск элементов карточки</div>' +
+      '<div>' + (results[2] ? '✅' : '⭕') + ' <b>Шаг 2:</b> Обновление имени героя по кнопке</div>' +
+      '<div>' + (results[3] ? '✅' : '⭕') + ' <b>Шаг 3:</b> Прокачка до 5 уровня и звание «⚔️ Рыцарь Кода»</div>' +
+      '<div>' + (results[4] ? '✅' : '⭕') + ' <b>Шаг 4:</b> Добавление нового предмета <code>&lt;li&gt;</code> в рюкзак</div>';
   }
 }
 
 /* ==========================================================================
-   3. БЛОК «КУЗНИЦА GIT И GITHUB» С ВИЗУАЛЬНЫМ СИМУЛЯТОРОМ
+   3. КУЗНИЦА GIT И GITHUB С МИССИЕЙ И ШКАЛОЙ ГОТОВНОСТИ (5 ШАГОВ)
    ========================================================================== */
 var gitSimState = {
   initialized: false,
@@ -1343,39 +2057,56 @@ var gitSimState = {
   branch: 'master',
   remoteUrl: '',
   pushed: false,
+  lastHint: '',
   logs: [
     'Добро пожаловать в интерактивный терминал Git Королевства!',
-    'Подсказка: нажимай на золотые кнопки команд по порядку (1 → 7) или вводи их вручную.'
+    'Твоя миссия: довести Шкалу готовности сохранения до 100%, выполнив 5 шагов по порядку.'
   ]
 };
 
 function renderGitModule() {
   updateHeaderStats();
-  setMascot('В <b>Кузнице Git и GitHub</b> ты научишься делать «сохранения» своего кода, как в компьютерной игре, и отправлять сайт в интернет! Попробуй нажимать кнопки команд внизу.');
+  setMascot('В <b>Кузнице Git</b> у тебя важная миссия: провести код через все 4 зоны до Облачного Замка GitHub! Если нажмёшь команду не в том порядке — я сразу дам сказочную подсказку!', 'normal');
 
   var html = '<div class="k-card mb-4">' +
     '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300">Управление версиями</span>' +
     '<h2 class="text-xl sm:text-2xl font-bold mt-1 mb-2">🐙 Кузница Git и Облачный Замок GitHub</h2>' +
-    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-3">' +
+    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-2">' +
       '<div class="p-3.5 rounded-xl border" style="border-color:var(--line); background:rgba(217,138,22,0.06)">' +
         '<h3 class="font-bold text-base mb-1">🕹️ Что такое Git? (Точки сохранения)</h3>' +
-        '<p>Представь, что ты проходишь сложную игру. Перед битвой с боссом ты делаешь <b>Save (сохранение)</b>. Если что-то пойдёт не так — всегда можно загрузить сохранение! <b>Git</b> — это программа на твоём компьютере, которая делает такие «точки сохранения» (они называются <b>коммитами — commits</b>) для твоего кода.</p>' +
+        '<p>Представь сложную игру: перед битвой с драконом ты делаешь <b>Save (сохранение)</b>. <b>Git</b> — это машина времени для кода, которая делает точки сохранения (<b>коммиты — commits</b>), чтобы ты всегда мог вернуться к рабочей версии!</p>' +
       '</div>' +
       '<div class="p-3.5 rounded-xl border" style="border-color:var(--line); background:rgba(36,130,82,0.06)">' +
         '<h3 class="font-bold text-base mb-1">🏰 Что такое GitHub? (Облачный замок)</h3>' +
-        '<p><b>GitHub</b> — это сайт в интернете, где живут проекты программистов со всего мира. Туда ты отправляешь свои сохранения из Git, чтобы код никогда не потерялся, чтобы показывать проекты друзьям и бесплатно публиковать свои сайты через <b>GitHub Pages</b>!</p>' +
+        '<p><b>GitHub</b> — это облачный замок в интернете, куда ты отправляешь свои сохранения командой <code>git push</code>, чтобы код никогда не потерялся и его можно было показать друзьям!</p>' +
       '</div>' +
     '</div>' +
   '</div>';
 
-  // Визуальный конвейер 4 зон Git
+  // Миссия Кузнеца со Шкалой готовности 0-100%
   html += '<div class="k-card mb-4">' +
-    '<h3 class="font-bold text-base sm:text-lg mb-3">✨ Интерактивный тренажёр: проведи код от папки до GitHub!</h3>' +
+    '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
+      '<h3 class="font-bold text-base sm:text-lg">🎯 Миссия Кузнеца: 5 шагов до Облачного Замка</h3>' +
+      '<button class="k-btn ghost text-xs !py-1 !px-3" onclick="showGitNextHint()">💡 Что мне нажать сейчас?</button>' +
+    '</div>' +
+
+    '<div class="p-3.5 rounded-2xl border bg-black/5 dark:bg-white/5 mb-4" style="border-color:var(--line)">' +
+      '<div class="flex items-center justify-between text-xs font-bold mb-1.5">' +
+        '<span>🔮 Шкала готовности миссии Git:</span>' +
+        '<span id="git-readiness-label" class="text-sm font-extrabold text-amber-600 dark:text-amber-400">0%</span>' +
+      '</div>' +
+      '<div class="readiness-track mb-3">' +
+        '<div id="git-readiness-bar" class="readiness-fill" style="width:0%"></div>' +
+      '</div>' +
+      '<div id="git-checkpoints-bar" class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs"></div>' +
+    '</div>' +
+
+    '<div id="git-hint-banner" class="hidden mb-3 p-3 rounded-xl border-2 text-xs sm:text-sm animate-pop" style="border-color:var(--magic); background:var(--magic-light)"></div>' +
+
     '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4" id="git-zones-view"></div>' +
 
-    // Быстрые кнопки команд по шагам
     '<div class="mb-3">' +
-      '<div class="text-xs font-bold mb-1.5">⚡ Нажимай команды по порядку или вводи их в терминал ниже:</div>' +
+      '<div class="text-xs font-bold mb-1.5">⚡ Нажимай на руны команд по порядку или печатай их в терминале внизу:</div>' +
       '<div class="flex flex-wrap gap-1.5">' +
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git init\')">1. git init</button>' +
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git status\')">2. git status</button>' +
@@ -1384,11 +2115,10 @@ function renderGitModule() {
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git branch -M main\')">5. git branch -M main</button>' +
         '<button class="k-btn text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git remote add origin https://github.com/hero/kingdom.git\')">6. git remote add</button>' +
         '<button class="k-btn green text-xs !py-1.5 !px-2.5" onclick="runGitCommand(\'git push -u origin main\')">7. git push -u origin main</button>' +
-        '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="resetGitSim()">↺ Сбросить тренажёр</button>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="resetGitSim()">↺ Сбросить</button>' +
       '</div>' +
     '</div>' +
 
-    // Терминал
     '<div class="rounded-xl overflow-hidden border-2" style="border-color:var(--line); background:var(--code)">' +
       '<div class="px-3 py-1.5 bg-black/40 text-xs text-slate-400 flex justify-between items-center font-mono">' +
         '<span>bash — ~/kingdom-project</span>' +
@@ -1397,33 +2127,32 @@ function renderGitModule() {
       '<pre id="git-terminal-out" class="p-3.5 text-xs sm:text-sm text-emerald-300 font-mono max-h-56 overflow-y-auto whitespace-pre-wrap"></pre>' +
       '<div class="flex items-center border-t border-white/10 px-3 py-2 bg-black/20">' +
         '<span class="text-amber-400 font-mono font-bold mr-2">$</span>' +
-        '<input id="git-cmd-input" type="text" class="flex-1 bg-transparent text-white font-mono text-sm outline-none" placeholder="Введи команду git (например, git status) и нажми Enter..." onkeydown="if(event.key===\'Enter\')submitGitInput()" />' +
+        '<input id="git-cmd-input" type="text" class="flex-1 bg-transparent text-white font-mono text-sm outline-none" placeholder="Введи команду git (например, git init) и нажми Enter..." onkeydown="if(event.key===\'Enter\')submitGitInput()" />' +
         '<button class="k-btn text-xs !py-1 !px-3" onclick="submitGitInput()">Выполнить</button>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
-
-  // Шпаргалка для реальной жизни + GitHub Pages
-  html += '<div class="k-card">' +
-    '<h3 class="font-bold text-lg mb-2">📘 Пошаговая шпаргалка: как выложить свой сайт на GitHub Pages</h3>' +
-    '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">' +
-      '<div class="p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 1. Создай репозиторий</div>' +
-        'Зарегистрируйся на <b>github.com</b>, нажми зелёную кнопку <b>New</b> (Новый репозиторий), назови его, например, <code>my-first-game</code> и нажми <b>Create repository</b>.' +
-      '</div>' +
-      '<div class="p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 2. Отправь файлы</div>' +
-        'Выполни в терминале VS Code команды с нашего тренажёра (<code>git init</code> → <code>git add .</code> → <code>git commit</code> → <code>git push</code>), либо просто перетащи свой <code>index.html</code> через кнопку <b>Upload files</b> на сайте GitHub!' +
-      '</div>' +
-      '<div class="p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-amber-600 dark:text-amber-400 mb-1">Шаг 3. Включи GitHub Pages</div>' +
-        'В репозитории зайди во вкладку <b>Settings → Pages</b>, в разделе <b>Branch</b> выбери ветку <code>main</code> и нажми <b>Save</b>. Через минуту твой сайт откроется по настоящей ссылке в интернете!' +
       '</div>' +
     '</div>' +
   '</div>';
 
   $('app').innerHTML = html;
   updateGitSimView();
+}
+
+function showGitNextHint(customMsg) {
+  MagicSound.playHint();
+  var hb = $('git-hint-banner');
+  if (!hb) return;
+  hb.classList.remove('hidden');
+
+  var msg = customMsg;
+  if (!msg) {
+    if (!state.gitSteps.init) msg = '🕯️ <b>Шаг 1:</b> Сначала включи машину времени Git в папке проекта — нажми кнопку <code>1. git init</code>!';
+    else if (!state.gitSteps.status) msg = '🕯️ <b>Шаг 2:</b> Теперь проверь состояние файлов в папке командой <code>2. git status</code>!';
+    else if (!state.gitSteps.add) msg = '🕯️ <b>Шаг 3:</b> Положи файлы в корзину подготовки к сохранению командой <code>3. git add .</code>!';
+    else if (!state.gitSteps.commit) msg = '🕯️ <b>Шаг 4:</b> Запечатай капсулу сохранения с описанием: <code>4. git commit -m "..."</code>!';
+    else if (!state.gitSteps.push) msg = '🕯️ <b>Шаг 5:</b> Отправь свои сохранения в Облачный Замок GitHub зелёной кнопкой <code>7. git push -u origin main</code>!';
+    else msg = '🌟 Все 5 шагов миссии Кузнеца выполнены на 100%! Можешь тренироваться сколько угодно!';
+  }
+  hb.innerHTML = msg;
 }
 
 function submitGitInput() {
@@ -1434,6 +2163,7 @@ function submitGitInput() {
 }
 
 function resetGitSim() {
+  MagicSound.playClick();
   gitSimState = {
     initialized: false,
     staged: false,
@@ -1451,66 +2181,79 @@ function runGitCommand(rawCmd) {
   gitSimState.logs.push('$ ' + cmd);
 
   if (cmd === 'git init') {
+    MagicSound.playSuccess();
     gitSimState.initialized = true;
     state.gitSteps.init = 1;
-    gitSimState.logs.push('✅ Пустой репозиторий Git инициализирован в папке ~/kingdom-project/.git/');
+    gitSimState.logs.push('✅ Репозиторий Git успешно создан в папке ~/kingdom-project/.git/');
   } else if (cmd === 'git status') {
+    MagicSound.playRune();
     state.gitSteps.status = 1;
     if (!gitSimState.initialized) {
-      gitSimState.logs.push('⚠️ fatal: это ещё не репозиторий git. Сначала выполни: git init');
+      MagicSound.playError();
+      gitSimState.logs.push('⚠️ Ой! Папка ещё не знает про Git. Сначала выполни: git init');
+      showGitNextHint('🐾 <b>Подсказка Кота Басика:</b> Нельзя проверить статус, пока не включён Git! Сначала нажми кнопку <b>1. git init</b>.');
     } else if (gitSimState.pushed) {
-      gitSimState.logs.push('На ветке ' + gitSimState.branch + '. Всё синхронизировано с облаком GitHub!');
+      gitSimState.logs.push('На ветке ' + gitSimState.branch + '. Все сохранения уже в облаке GitHub!');
     } else if (gitSimState.staged) {
-      gitSimState.logs.push('Изменения подготовлены к коммиту (в корзине Staging):\n  новый файл: index.html\n  новый файл: script.js\nВыполни git commit -m "Описание"');
+      gitSimState.logs.push('Файлы лежат на Сцене (Staging) и ждут коммита:\n  новый файл: index.html\n  новый файл: script.js');
     } else {
-      gitSimState.logs.push('Неотслеживаемые файлы в рабочей папке:\n  index.html, script.js\nИспользуй "git add .", чтобы подготовить их к сохранению.');
+      gitSimState.logs.push('Неотслеживаемые файлы:\n  index.html, script.js\nНажми "3. git add .", чтобы подготовить их к сохранению.');
     }
   } else if (/^git add/.test(cmd)) {
     if (!gitSimState.initialized) {
+      MagicSound.playError();
       gitSimState.logs.push('⚠️ Сначала включи машину времени командой: git init');
+      showGitNextHint('🐾 <b>Подсказка Кота Басика:</b> Перед добавлением файлов обязательно нужно нажать <b>1. git init</b>!');
     } else {
+      MagicSound.playSuccess();
       gitSimState.staged = true;
       state.gitSteps.add = 1;
-      gitSimState.logs.push('🛒 Файлы index.html и script.js перенесены на Сцену (Staging Area)! Готовы к коммиту.');
+      gitSimState.logs.push('🛒 Файлы index.html и script.js перенесены на Сцену (Staging Area)! Теперь сделай git commit.');
     }
   } else if (/^git commit/.test(cmd)) {
     if (!gitSimState.staged) {
-      gitSimState.logs.push('⚠️ На сцене нет файлов для сохранения! Сначала выполни: git add .');
+      MagicSound.playError();
+      gitSimState.logs.push('⚠️ На сцене пусто! Сначала положи туда файлы командой: git add .');
+      showGitNextHint('🐾 <b>Подсказка Кота Басика:</b> Чтобы сделать сохранение (commit), нужно сначала сложить файлы в корзину кнопкой <b>3. git add .</b>!');
     } else {
+      MagicSound.playSuccess();
       var m = cmd.match(/-m\s+["']([^"']+)["']/);
       var msg = m ? m[1] : 'Точка сохранения';
       var hash = Math.random().toString(16).substring(2, 8);
       gitSimState.commits.push({ hash: hash, msg: msg });
       gitSimState.staged = false;
       state.gitSteps.commit = 1;
-      gitSimState.logs.push('📦 [' + gitSimState.branch + ' ' + hash + '] ' + msg + '\n 2 files changed, 45 insertions(+)');
+      gitSimState.logs.push('📦 [' + gitSimState.branch + ' ' + hash + '] ' + msg + '\n Точка сохранения создана!');
     }
   } else if (/^git branch -M (\w+)/.test(cmd)) {
+    MagicSound.playRune();
     var bMatch = cmd.match(/^git branch -M (\w+)/);
     gitSimState.branch = bMatch[1];
-    state.gitSteps.branch = 1;
-    gitSimState.logs.push('🌿 Главная ветка переименована в "' + gitSimState.branch + '".');
+    gitSimState.logs.push('🌿 Главная ветка названа "' + gitSimState.branch + '".');
   } else if (/^git remote add origin\s+(\S+)/.test(cmd)) {
+    MagicSound.playRune();
     var rMatch = cmd.match(/^git remote add origin\s+(\S+)/);
     gitSimState.remoteUrl = rMatch[1];
-    state.gitSteps.remote = 1;
-    gitSimState.logs.push('🔗 Установлена связь с облачным замком GitHub: ' + gitSimState.remoteUrl);
+    gitSimState.logs.push('🔗 Проложен мост к Облачному Замку GitHub: ' + gitSimState.remoteUrl);
   } else if (/^git push/.test(cmd)) {
     if (gitSimState.commits.length === 0) {
-      gitSimState.logs.push('⚠️ Нет ни одного сохранения (commit)! Сначала сделай git add . и git commit.');
+      MagicSound.playError();
+      gitSimState.logs.push('⚠️ У тебя ещё нет ни одной точки сохранения (commit)!');
+      showGitNextHint('🐾 <b>Подсказка Кота Басика:</b> Нечего отправлять в облако! Сначала выполни по очереди: <b>1. git init</b> → <b>3. git add .</b> → <b>4. git commit</b>.');
     } else {
-      if (!gitSimState.remoteUrl) {
-        gitSimState.remoteUrl = 'https://github.com/hero/kingdom.git';
-      }
+      MagicSound.playFanfare();
+      if (!gitSimState.remoteUrl) gitSimState.remoteUrl = 'https://github.com/hero/kingdom.git';
       gitSimState.pushed = true;
       if (!state.gitSteps.push) {
         state.gitSteps.push = 1;
-        addCoins(15, 'Код успешно отправлен на GitHub!');
+        addCoins(20, 'Миссия Кузнеца Git выполнена на 100%!');
       }
-      gitSimState.logs.push('🚀 Перечисление объектов: 100%... Готово!\n☁️ Все коммиты успешно доставлены в GitHub (' + gitSimState.remoteUrl + ')!');
+      gitSimState.logs.push('🚀 Вжух! Все сохранения доставлены в Облачный Замок GitHub (' + gitSimState.remoteUrl + ')!');
+      setMascot('Ура! 🎉 Ты прошёл все 5 шагов миссии Кузнеца и отправил код в Облачный Замок GitHub!', 'star');
     }
   } else {
-    gitSimState.logs.push('🤔 Команда не распознана тренажёром. Попробуй: git init, git status, git add ., git commit -m "Сейв", git push');
+    MagicSound.playError();
+    gitSimState.logs.push('🤔 Неизвестное заклинание. Попробуй нажать одну из золотых кнопок над терминалом!');
   }
 
   saveState();
@@ -1526,6 +2269,30 @@ function updateGitSimView() {
   var br = $('git-branch-indicator');
   if (br) br.textContent = 'ветка: ' + gitSimState.branch;
 
+  // Обновляем шкалу готовности миссии Git
+  var gitChecks = [
+    { ok: !!state.gitSteps.init, label: '1. git init' },
+    { ok: !!state.gitSteps.status, label: '2. git status' },
+    { ok: !!state.gitSteps.add, label: '3. git add .' },
+    { ok: !!state.gitSteps.commit, label: '4. git commit' },
+    { ok: !!state.gitSteps.push, label: '5. git push' }
+  ];
+  var doneCnt = gitChecks.filter(function(c) { return c.ok; }).length;
+  var pct = Math.round((doneCnt / 5) * 100);
+  var bar = $('git-readiness-bar');
+  var lbl = $('git-readiness-label');
+  var cpBar = $('git-checkpoints-bar');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = pct + '% (' + doneCnt + '/5 шагов)';
+  if (cpBar) {
+    cpBar.innerHTML = gitChecks.map(function(c) {
+      return '<div class="p-2 rounded-xl border text-center font-mono font-bold ' +
+        (c.ok ? 'border-emerald-500 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : 'border-amber-500/30 opacity-75') + '">' +
+        (c.ok ? '✅ ' : '⭕ ') + c.label +
+      '</div>';
+    }).join('');
+  }
+
   var zones = $('git-zones-view');
   if (!zones) return;
 
@@ -1536,39 +2303,35 @@ function updateGitSimView() {
   zones.innerHTML =
     '<div class="p-3 rounded-xl border-2 ' + (!gitSimState.staged && gitSimState.commits.length === 0 ? 'border-amber-500 bg-amber-500/10' : 'opacity-80') + '" style="border-color:var(--line)">' +
       '<div class="font-bold text-xs mb-1">1. 📁 Рабочая папка</div>' +
-      '<div class="text-[11px] opacity-75 mb-2">Твои файлы на диске:</div>' +
       '<div class="space-y-1 text-xs font-mono">' +
         '<div class="px-2 py-1 rounded bg-black/10 dark:bg-white/10">📄 index.html</div>' +
         '<div class="px-2 py-1 rounded bg-black/10 dark:bg-white/10">📄 script.js</div>' +
       '</div>' +
-      '<div class="mt-2 text-[11px] font-bold">' + (gitSimState.initialized ? '✅ Git включён (git init)' : '⏳ Нажми 1. git init') + '</div>' +
+      '<div class="mt-2 text-[11px] font-bold">' + (gitSimState.initialized ? '✅ Git включён' : '⏳ Ждёт git init') + '</div>' +
     '</div>' +
 
     '<div class="p-3 rounded-xl border-2 ' + (gitSimState.staged ? 'border-amber-500 bg-amber-500/15' : '') + '" style="' + (!gitSimState.staged ? 'border-color:var(--line)' : '') + '">' +
       '<div class="font-bold text-xs mb-1">2. 🛒 Сцена (Staging)</div>' +
-      '<div class="text-[11px] opacity-75 mb-2">Подготовлено через <code>git add .</code>:</div>' +
       (gitSimState.staged
-        ? '<div class="space-y-1 text-xs font-mono text-amber-600 dark:text-amber-300 font-bold"><div class="px-2 py-1 rounded bg-amber-500/20">📦 index.html (готов)</div><div class="px-2 py-1 rounded bg-amber-500/20">📦 script.js (готов)</div></div>'
-        : '<div class="text-xs italic opacity-60">Пусто (выполни git add .)</div>') +
+        ? '<div class="space-y-1 text-xs font-mono text-amber-600 dark:text-amber-300 font-bold"><div class="px-2 py-1 rounded bg-amber-500/20">📦 index.html</div><div class="px-2 py-1 rounded bg-amber-500/20">📦 script.js</div></div>'
+        : '<div class="text-xs italic opacity-60">Пусто (нажми git add .)</div>') +
     '</div>' +
 
     '<div class="p-3 rounded-xl border-2 ' + (gitSimState.commits.length > 0 ? 'border-emerald-500 bg-emerald-500/10' : '') + '" style="' + (gitSimState.commits.length === 0 ? 'border-color:var(--line)' : '') + '">' +
-      '<div class="font-bold text-xs mb-1">3. 🕰️ Локальная история (Commits)</div>' +
-      '<div class="text-[11px] opacity-75 mb-2">Точки сохранения (<code>git commit</code>):</div>' +
+      '<div class="font-bold text-xs mb-1">3. 🕰️ Сейвы (Commits)</div>' +
       '<div class="space-y-1">' + (cList || '<div class="text-xs italic opacity-60">Пока нет сохранений</div>') + '</div>' +
     '</div>' +
 
     '<div class="p-3 rounded-xl border-2 ' + (gitSimState.pushed ? 'border-emerald-500 bg-emerald-500/20' : '') + '" style="' + (!gitSimState.pushed ? 'border-color:var(--line)' : '') + '">' +
-      '<div class="font-bold text-xs mb-1">4. ☁️ Облако GitHub (Remote)</div>' +
-      '<div class="text-[11px] opacity-75 mb-2">Отправка через <code>git push</code>:</div>' +
+      '<div class="font-bold text-xs mb-1">4. ☁️ Замок GitHub</div>' +
       (gitSimState.pushed
-        ? '<div class="text-xs font-bold text-emerald-600 dark:text-emerald-300">🏰 Код в облаке GitHub!<br><span class="font-mono text-[10px]">' + esc(gitSimState.remoteUrl) + '</span></div><div class="mt-1 space-y-1">' + cList + '</div>'
+        ? '<div class="text-xs font-bold text-emerald-600 dark:text-emerald-300">🏰 Доставлено в облако!</div><div class="mt-1 space-y-1">' + cList + '</div>'
         : '<div class="text-xs italic opacity-60">Ждёт отправки (git push)</div>') +
     '</div>';
 }
 
 /* ==========================================================================
-   4. БЛОК «МЕЛЬНИЦА NODE.JS И СВОЙ СЕРВЕР»
+   4. МЕЛЬНИЦА NODE.JS С САМОСТОЯТЕЛЬНОЙ МИССИЕЙ И ШКАЛОЙ ГОТОВНОСТИ
    ========================================================================== */
 var DEFAULT_NODE_SERVER_CODE =
 'const express = require("express");\n' +
@@ -1593,94 +2356,49 @@ var DEFAULT_NODE_SERVER_CODE =
 '  console.log("Сервер запущен на http://localhost:" + PORT);\n' +
 '});';
 
-var nodeSimRunning = true;
 var nodeServerLogs = ['[Node.js v22 LTS] Готов к запуску server.js...'];
 
 function renderNodeModule() {
   updateHeaderStats();
-  setMascot('Добро пожаловать на <b>Мельницу Node.js</b>! Раньше JavaScript умел жить только внутри браузера. Но благодаря <b>Node.js</b> он выбрался наружу и теперь может управлять серверами, роботами и играми!');
-
-  var steps = [
-    {
-      num: 'Шаг 1',
-      title: 'Установи Node.js LTS',
-      desc: 'Скачай установщик с официального сайта nodejs.org (выбирай кнопку LTS — самая надёжная версия) и проверь установку в терминале:',
-      cmd: 'node -v\nnpm -v'
-    },
-    {
-      num: 'Шаг 2',
-      title: 'Создай паспорт проекта (package.json)',
-      desc: 'Открой пустую папку проекта в редакторе VS Code, открой терминал и создай файл-паспорт проектаpackage.json:',
-      cmd: 'npm init -y'
-    },
-    {
-      num: 'Шаг 3',
-      title: 'Установи библиотеку сервера Express',
-      desc: 'npm — это магазин волшебных деталей. Установим пакет express, чтобы создать веб-сервер всего в 10 строчек кода:',
-      cmd: 'npm install express'
-    },
-    {
-      num: 'Шаг 4',
-      title: 'Запусти свой сервер!',
-      desc: 'Создай файл server.js (код справа в тренажёре) и запусти его в терминале командой:',
-      cmd: 'node server.js'
-    }
-  ];
+  setMascot('Добро пожаловать на <b>Мельницу Node.js</b>! Выполни 3 шага Миссии Мельника: измени награду или имя героя в коде сервера <code>server.js</code> и проверь маршруты в мини-браузере!', 'normal');
 
   var html = '<div class="k-card mb-4">' +
-    '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300">Бэкенд и Серверы</span>' +
-    '<h2 class="text-xl sm:text-2xl font-bold mt-1 mb-2">🟢 Мельница Node.js: что это и как поднять свой сервер</h2>' +
-    '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mt-3">' +
-      '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-base mb-1">🚀 Что такое Node.js?</div>' +
-        '<p class="text-xs sm:text-sm" style="color:var(--mute)">Внутри браузера Chrome работает мощный мотор <b>V8</b>, который выполняет код JavaScript. Инженеры взяли этот мотор и установили его отдельно на компьютер — так появился <b>Node.js</b>! Теперь на JS можно писать серверы для игр, сайтов и Telegram-ботов.</p>' +
+    '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
+      '<div>' +
+        '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300">Серверная магия</span>' +
+        '<h2 class="text-xl sm:text-2xl font-bold mt-1">🟢 Мельница Node.js: запусти свой игровой сервер!</h2>' +
       '</div>' +
-      '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-base mb-1">📦 Что такое npm?</div>' +
-        '<p class="text-xs sm:text-sm" style="color:var(--mute)"><b>npm (Node Package Manager)</b> — это огромный бесплатный магазин готовых библиотек (пакетов). Вместо того чтобы писать всё с нуля, ты пишешь <code>npm install express</code>, и умные помощники скачиваются в папку <code>node_modules</code>.</p>' +
-      '</div>' +
-      '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-base mb-1">🪪 Что такое package.json?</div>' +
-        '<p class="text-xs sm:text-sm" style="color:var(--mute)">Это <b>паспорт твоего проекта</b>. В нём записано название игры или сайта, версия и список всех установленных через npm библиотек (<code>dependencies</code>).</p>' +
-      '</div>' +
+      '<button class="k-btn ghost text-xs !py-1.5 !px-3" onclick="showNodeHint()">💡 Подсказка Мельника</button>' +
     '</div>' +
+    '<p class="text-sm mb-3" style="color:var(--mute)"><b>Node.js</b> позволяет языку JavaScript работать вне браузера и управлять настоящими серверами, а библиотека <b>Express</b> помогает отвечать на запросы игроков по разным адресам (маршрутам)!</p>' +
+
+    // Шкала готовности миссии Node.js
+    '<div class="p-3.5 rounded-2xl border bg-black/5 dark:bg-white/5" style="border-color:var(--line)">' +
+      '<div class="flex items-center justify-between text-xs font-bold mb-1.5">' +
+        '<span>🔮 Шкала готовности Сервера Королевства:</span>' +
+        '<span id="node-readiness-label" class="text-sm font-extrabold text-amber-600 dark:text-amber-400">0%</span>' +
+      '</div>' +
+      '<div class="readiness-track mb-3">' +
+        '<div id="node-readiness-bar" class="readiness-fill" style="width:0%"></div>' +
+      '</div>' +
+      '<div id="node-checkpoints" class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs"></div>' +
+    '</div>' +
+
+    '<div id="node-hint-box" class="hidden mt-3 p-3.5 rounded-2xl border-2 text-xs sm:text-sm animate-pop" style="border-color:var(--magic); background:var(--magic-light)"></div>' +
   '</div>';
 
-  // Пошаговая инструкция развёртывания на своём компьютере
-  html += '<div class="k-card mb-4">' +
-    '<h3 class="font-bold text-base sm:text-lg mb-3">🛠️ Пошаговая инструкция: как развернуть сервер у себя на компьютере</h3>' +
-    '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">' +
-      steps.map(function(s) {
-        return '<div class="p-3 rounded-xl border flex flex-col justify-between" style="border-color:var(--line)">' +
-          '<div>' +
-            '<span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300">' + s.num + '</span>' +
-            '<h4 class="font-bold text-sm mt-1.5 mb-1">' + s.title + '</h4>' +
-            '<p class="text-xs mb-2" style="color:var(--mute)">' + s.desc + '</p>' +
-          '</div>' +
-          '<div>' +
-            '<pre class="p-2 rounded-lg bg-slate-900 text-emerald-300 text-xs font-mono mb-2 overflow-x-auto">' + esc(s.cmd) + '</pre>' +
-            '<button class="k-btn ghost text-xs !py-1 !px-2.5 w-full justify-center" onclick="copyText(' + JSON.stringify(s.cmd) + ', \'команда\')">📋 Скопировать команду</button>' +
-          '</div>' +
-        '</div>';
-      }).join('') +
-    '</div>' +
-  '</div>';
-
-  // Интерактивный симулятор сервера Node.js + Express
   html += '<div class="grid grid-cols-1 lg:grid-cols-12 gap-4">' +
     '<div class="lg:col-span-7 k-card">' +
       '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
-        '<div class="flex items-center gap-2">' +
-          '<span class="font-bold text-sm">📄 Файл <code>server.js</code> (можно менять текст и JSON!):</span>' +
-        '</div>' +
+        '<span class="font-bold text-sm">📄 Код твоего сервера <code>server.js</code>:</span>' +
         '<div class="flex gap-2">' +
-          '<button id="node-toggle-btn" class="k-btn green text-xs !py-1.5 !px-3" onclick="restartNodeSim()">▶ Перезапустить сервер (Порт 3000)</button>' +
-          '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="copyText($(\'node-code\').value, \'server.js\')">📋 Копировать</button>' +
+          '<button class="k-btn green text-xs !py-1.5 !px-3" onclick="restartNodeSim()">▶ Перезапустить сервер</button>' +
+          '<button class="k-btn ghost text-xs !py-1.5 !px-2.5" onclick="upgradeNodeServerCode()">🪄 Улучшить награду (500 🪙)</button>' +
         '</div>' +
       '</div>' +
-      '<textarea id="node-code" class="code-editor !min-h-[280px]" spellcheck="false">' + esc(DEFAULT_NODE_SERVER_CODE) + '</textarea>' +
+      '<textarea id="node-code" class="code-editor !min-h-[280px]" spellcheck="false">' + esc(window._savedNodeCode || DEFAULT_NODE_SERVER_CODE) + '</textarea>' +
       '<div class="mt-2">' +
-        '<div class="text-xs font-bold opacity-75">🖥️ Консоль терминала сервера Node.js:</div>' +
+        '<div class="text-xs font-bold opacity-75">🖥️ Консоль сервера Node.js:</div>' +
         '<pre id="node-term-out" class="out-console !min-h-[75px]"></pre>' +
       '</div>' +
     '</div>' +
@@ -1688,15 +2406,15 @@ function renderNodeModule() {
     '<div class="lg:col-span-5 k-card flex flex-col justify-between">' +
       '<div>' +
         '<div class="flex items-center justify-between mb-2">' +
-          '<span class="font-bold text-sm">🌐 Мини-браузер (Клиент):</span>' +
-          '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-bold">● localhost:3000 онлайн</span>' +
+          '<span class="font-bold text-sm">🌐 Мини-браузер Игрока:</span>' +
+          '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-bold">● localhost:3000</span>' +
         '</div>' +
-        '<p class="text-xs mb-3" style="color:var(--mute)">Нажимай на адреса маршрутов ниже, чтобы отправить запрос на свой сервер Node.js и увидеть ответ!</p>' +
+        '<p class="text-xs mb-3" style="color:var(--mute)">Нажимай на кнопки маршрутов, чтобы отправить запрос на свой сервер:</p>' +
 
         '<div class="flex flex-wrap gap-1.5 mb-3">' +
-          '<button class="k-btn text-xs !py-1.5 !px-3" onclick="requestNodeRoute(\'/\')">GET /</button>' +
-          '<button class="k-btn text-xs !py-1.5 !px-3" onclick="requestNodeRoute(\'/heroes\')">GET /heroes</button>' +
-          '<button class="k-btn text-xs !py-1.5 !px-3" onclick="requestNodeRoute(\'/quest\')">GET /quest</button>' +
+          '<button class="k-btn text-xs !py-1.5 !px-3" onclick="requestNodeRoute(\'/\')">1. GET /</button>' +
+          '<button class="k-btn text-xs !py-1.5 !px-3" onclick="requestNodeRoute(\'/heroes\')">2. GET /heroes</button>' +
+          '<button class="k-btn green text-xs !py-1.5 !px-3" onclick="requestNodeRoute(\'/quest\')">3. GET /quest</button>' +
         '</div>' +
 
         '<div class="rounded-xl border-2 overflow-hidden bg-white text-slate-900" style="border-color:var(--line)">' +
@@ -1709,7 +2427,7 @@ function renderNodeModule() {
       '</div>' +
 
       '<div class="mt-4 p-3 rounded-xl bg-black/5 dark:bg-white/5 text-xs">' +
-        '💡 <b>Эксперимент:</b> Измени в коде <code>server.js</code> слева уровень героя или название квеста, нажми <b>«▶ Перезапустить сервер»</b> и проверь ответ в мини-браузере!' +
+        '🎯 <b>Как получить 100% готовности:</b> 1) Измени в коде <code>server.js</code> число <code>50</code> или имя героя (или нажми кнопку «🪄 Улучшить награду»); 2) Нажми на кнопки <b>GET /heroes</b> и <b>GET /quest</b>!' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -1719,52 +2437,85 @@ function renderNodeModule() {
   requestNodeRoute('/');
 }
 
+function showNodeHint() {
+  MagicSound.playHint();
+  var box = $('node-hint-box');
+  if (!box) return;
+  box.classList.remove('hidden');
+  box.innerHTML =
+    '🕯️ <b>Подсказка Мельника:</b> Найди в редакторе слева строчку <code>rewardCoins: 50</code> и замени число <code>50</code> на <code>500</code> (или просто нажми кнопку <b>«🪄 Улучшить награду (500 🪙)»</b> над редактором). После этого нажми справа на кнопки <b>2. GET /heroes</b> и <b>3. GET /quest</b>!';
+}
+
+function upgradeNodeServerCode() {
+  MagicSound.playRune();
+  var ta = $('node-code');
+  if (!ta) return;
+  ta.value = DEFAULT_NODE_SERVER_CODE.replace('rewardCoins: 50', 'rewardCoins: 500').replace('Победить Дракона Багов', 'Одолеть Короля Багов');
+  window._savedNodeCode = ta.value;
+  restartNodeSim();
+  requestNodeRoute('/quest');
+  toast('🪄 Награда на сервере увеличена до 500 монет!');
+}
+
 function restartNodeSim() {
+  MagicSound.playClick();
   nodeServerLogs.push('🔄 Перезапуск: node server.js...');
-  nodeServerLogs.push('✅ Сервер запущен на http://localhost:3000 (готов принимать запросы)');
+  nodeServerLogs.push('✅ Сервер запущен на http://localhost:3000');
   var term = $('node-term-out');
-  if (term) {
-    term.textContent = nodeServerLogs.slice(-6).join('\n');
-  }
+  if (term) term.textContent = nodeServerLogs.slice(-6).join('\n');
+  updateNodeReadinessUI();
 }
 
 function requestNodeRoute(path) {
+  MagicSound.playClick();
   var code = $('node-code') ? $('node-code').value : DEFAULT_NODE_SERVER_CODE;
+  window._savedNodeCode = code;
   var urlEl = $('node-browser-url');
   var bodyEl = $('node-browser-body');
   if (urlEl) urlEl.textContent = 'http://localhost:3000' + path;
 
-  // Мини-симулятор Express для разбора пользовательских маршрутов app.get(...)
   var routes = {};
   var err = null;
   try {
     var fakeApp = {
-      get: function(routePath, handler) {
-        routes[routePath] = handler;
-      },
-      listen: function(port, cb) {
-        if (cb) cb();
-      }
+      get: function(routePath, handler) { routes[routePath] = handler; },
+      listen: function(port, cb) { if (cb) cb(); }
     };
-    var fakeRequire = function() {
-      return function() { return fakeApp; };
-    };
-    var fakeConsole = { log: function() {} };
+    var fakeRequire = function() { return function() { return fakeApp; }; };
     var fn = new Function('require', 'console', code);
-    fn(fakeRequire, fakeConsole);
+    fn(fakeRequire, { log: function() {} });
   } catch (e) {
     err = e;
   }
 
   if (err) {
-    bodyEl.innerHTML = '<span class="text-red-600 font-bold">⚠️ Ошибка в коде server.js:\n' + esc(err.message) + '</span>';
+    MagicSound.playError();
+    bodyEl.innerHTML = '<span class="text-red-600 font-bold">⚠️ Ошибка в server.js:\n' + esc(err.message) + '</span>';
     return;
   }
 
+  // Отмечаем выполнение шагов миссии Node.js
+  state.nodeChecks.run = 1;
+  if (code.trim() !== DEFAULT_NODE_SERVER_CODE.trim()) {
+    state.nodeChecks.custom = 1;
+  }
+  if (path === '/heroes' || path === '/quest') {
+    var prevDone = Object.keys(state.nodeChecks).length;
+    state.nodeChecks.routes = 1;
+    if (Object.keys(state.nodeChecks).length === 3 && prevDone < 3) {
+      MagicSound.playFanfare();
+      addCoins(20, 'Миссия Мельника Node.js выполнена на 100%!');
+      setMascot('Потрясающе! 🎉 Ты сам настроил сервер Node.js и проверил его маршруты на 100%!', 'star');
+    } else {
+      MagicSound.playSuccess();
+    }
+  }
+  saveState();
+  updateNodeReadinessUI();
+
   var handler = routes[path];
   if (!handler) {
-    nodeServerLogs.push('[Express] GET ' + path + ' -> 404 Not Found');
-    bodyEl.innerHTML = '<span class="text-red-600">404 Cannot GET ' + esc(path) + '</span>';
+    bodyEl.innerHTML = '<span class="text-red-600">404 Маршрут не найден: ' + esc(path) + '</span>';
   } else {
     var responsePayload = '';
     var isJson = false;
@@ -1774,149 +2525,153 @@ function requestNodeRoute(path) {
     };
     try {
       handler({ path: path }, fakeRes);
-      nodeServerLogs.push('[Express] GET ' + path + ' -> 200 OK (' + (isJson ? 'application/json' : 'text/html') + ')');
-      if (!state.nodeStarted && path !== '/') {
-        state.nodeStarted = true;
-        addCoins(15, 'Сервер Node.js протестирован!');
-      }
+      nodeServerLogs.push('[Express] GET ' + path + ' -> 200 OK');
       if (isJson) {
-        bodyEl.innerHTML = '<div class="text-xs text-emerald-700 font-bold mb-1">// JSON-ответ от сервера:</div><pre class="text-xs bg-slate-900 text-amber-200 p-3 rounded-lg overflow-x-auto">' + esc(responsePayload) + '</pre>';
+        bodyEl.innerHTML = '<div class="text-xs text-emerald-700 font-bold mb-1">// JSON-ответ твоего сервера:</div><pre class="text-xs bg-slate-900 text-amber-200 p-3 rounded-lg overflow-x-auto">' + esc(responsePayload) + '</pre>';
       } else {
         bodyEl.innerHTML = '<div class="text-base font-sans font-bold text-slate-800 p-2">' + esc(responsePayload) + '</div>';
       }
     } catch (e2) {
-      bodyEl.innerHTML = '<span class="text-red-600">500 Ошибка внутри обработчика маршрута: ' + esc(e2.message) + '</span>';
+      bodyEl.innerHTML = '<span class="text-red-600">500 Ошибка: ' + esc(e2.message) + '</span>';
     }
   }
 
   var term = $('node-term-out');
-  if (term) {
-    term.textContent = nodeServerLogs.slice(-6).join('\n');
-    term.scrollTop = term.scrollHeight;
+  if (term) term.textContent = nodeServerLogs.slice(-6).join('\n');
+}
+
+function updateNodeReadinessUI() {
+  var checks = [
+    { ok: !!state.nodeChecks.run, text: '1. Сервер запущен без ошибок' },
+    { ok: !!state.nodeChecks.custom, text: '2. Изменены данные в server.js (например, награда)' },
+    { ok: !!state.nodeChecks.routes, text: '3. Проверены маршруты /heroes или /quest' }
+  ];
+  var cnt = checks.filter(function(c) { return c.ok; }).length;
+  var pct = Math.round((cnt / 3) * 100);
+  var bar = $('node-readiness-bar');
+  var lbl = $('node-readiness-label');
+  var cp = $('node-checkpoints');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = pct + '% (' + cnt + '/3 проверок)';
+  if (cp) {
+    cp.innerHTML = checks.map(function(c) {
+      return '<div class="p-2.5 rounded-xl border ' + (c.ok ? 'border-emerald-500 bg-emerald-500/15 font-semibold' : 'border-amber-500/30 opacity-80') + '">' +
+        (c.ok ? '✅ ' : '⭕ ') + c.text +
+      '</div>';
+    }).join('');
   }
 }
 
 /* ==========================================================================
-   5. БЛОК «ГИЛЬДИЯ FIGMA: КАК ОТКРЫТЬ МАКЕТ И ПРОСМОТРЩИК .FIG В БРАУЗЕРЕ»
+   5. ГИЛЬДИЯ FIGMA (.FIG) С МИССИЕЙ ХУДОЖНИКА И ШКАЛОЙ ГОТОВНОСТИ
    ========================================================================== */
 var DEMO_FIG_LAYERS = [
   {
     id: 'card-root',
     name: 'Frame: HeroCard_Container',
     type: 'FRAME',
-    w: 340, h: 220, x: 0, y: 0,
+    w: 340, h: 220,
     bg: '#1E1B2E', color: '#FFFFFF',
     radius: '20px', padding: '20px',
-    font: 'Comfortaa, 700',
-    css: 'width: 340px;\nheight: 220px;\nbackground: #1E1B2E;\nborder-radius: 20px;\npadding: 20px;\nbox-shadow: 0 12px 24px rgba(0,0,0,0.35);'
+    css: 'width: 340px;\nheight: 220px;\nbackground: #1E1B2E;\nborder-radius: 20px;\npadding: 20px;'
   },
   {
     id: 'card-badge',
     name: 'Badge: Rank_Pill',
     type: 'COMPONENT',
-    w: 136, h: 26, x: 20, y: 20,
+    w: 136, h: 26,
     bg: '#F5B041', color: '#241604',
     radius: '999px', padding: '4px 12px',
-    font: 'Inter, 700, 12px',
-    css: 'background: #F5B041;\ncolor: #241604;\nborder-radius: 999px;\npadding: 4px 12px;\nfont-family: "Inter", sans-serif;\nfont-size: 12px;\nfont-weight: 700;'
+    css: 'background: #F5B041;\ncolor: #241604;\nborder-radius: 999px;\npadding: 4px 12px;\nfont-weight: 700;'
   },
   {
     id: 'card-title',
     name: 'Text: Hero_Title',
     type: 'TEXT',
-    w: 280, h: 32, x: 20, y: 58,
+    w: 280, h: 32,
     bg: 'transparent', color: '#F4EEFF',
     radius: '0px', padding: '0px',
-    font: 'Comfortaa, 700, 22px',
-    css: 'color: #F4EEFF;\nfont-family: "Comfortaa", cursive;\nfont-size: 22px;\nfont-weight: 700;\nline-height: 1.3;'
+    css: 'color: #F4EEFF;\nfont-family: "Comfortaa", cursive;\nfont-size: 22px;\nfont-weight: 700;'
   },
   {
     id: 'card-desc',
     name: 'Text: Quest_Description',
     type: 'TEXT',
-    w: 290, h: 40, x: 20, y: 98,
+    w: 290, h: 40,
     bg: 'transparent', color: '#A89EC4',
     radius: '0px', padding: '0px',
-    font: 'Inter, 400, 13px',
-    css: 'color: #A89EC4;\nfont-family: "Inter", sans-serif;\nfont-size: 13px;\nline-height: 1.5;'
+    css: 'color: #A89EC4;\nfont-size: 13px;\nline-height: 1.5;'
   },
   {
     id: 'card-cta',
     name: 'Button: Primary_Action',
     type: 'INSTANCE',
-    w: 300, h: 42, x: 20, y: 154,
+    w: 300, h: 42,
     bg: '#34D399', color: '#06281E',
     radius: '12px', padding: '10px 18px',
-    font: 'Inter, 700, 14px',
-    css: 'width: 100%;\nheight: 42px;\nbackground: #34D399;\ncolor: #06281E;\nborder-radius: 12px;\npadding: 10px 18px;\nfont-weight: 700;'
+    css: 'width: 100%;\nheight: 42px;\nbackground: #34D399;\ncolor: #06281E;\nborder-radius: 12px;\nfont-weight: 700;'
   }
 ];
 
 var selectedFigLayer = DEMO_FIG_LAYERS[0];
 var customFigReport = null;
+var clickedLayersSet = { 'card-root': true };
 
 function renderFigmaModule() {
   updateHeaderStats();
-  setMascot('В <b>Гильдии Дизайна Figma</b> ты узнаешь, как веб-разработчики открывают макеты сайтов с расширением <code>.fig</code> прямо в браузере, и сможешь покликать по слоям макета в нашем встроенном инспекторе!');
+  setMascot('В <b>Гильдии Figma</b> тебя ждёт Миссия Королевского Художника: покликай по слоям макета на холсте, скопируй CSS-код зелёной кнопки и испытай открытие файла <code>.fig</code>!', 'normal');
 
   var html = '<div class="k-card mb-4">' +
-    '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-600 dark:text-pink-300">Дизайн и Вёрстка</span>' +
-    '<h2 class="text-xl sm:text-2xl font-bold mt-1 mb-2">🎨 Гильдия Figma: как открыть макет и файл <code>.fig</code> прямо в браузере</h2>' +
-    '<p class="text-sm mb-3" style="color:var(--mute)">Когда дизайнер рисует будущий сайт или игру, он присылает программисту ссылку на <b>Figma</b> или файл на компьютере с расширением <code>.fig</code>. Давай разберёмся, как открыть его за 10 секунд без установки сложных программ!</p>' +
+    '<div class="flex flex-wrap items-center justify-between gap-2 mb-2">' +
+      '<div>' +
+        '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-600 dark:text-pink-300">Дизайн и Вёрстка</span>' +
+        '<h2 class="text-xl sm:text-2xl font-bold mt-1">🎨 Гильдия Figma: Миссия Королевского Художника</h2>' +
+      '</div>' +
+      '<button class="k-btn ghost text-xs !py-1.5 !px-3" onclick="showFigmaHint()">💡 Подсказка Художника</button>' +
+    '</div>' +
 
-    '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">' +
-      '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-base mb-1">1️⃣ Открываем .fig в браузере</div>' +
-        '<p style="color:var(--mute)">Зайди на сайт <b>figma.com</b> в любом браузере и войди в бесплатный аккаунт. На главном экране (Drafts / Recents) нажми кнопку <b>«Import file»</b> в правом верхнем углу (или просто <b>перетащи файл <code>.fig</code> мышкой</b> из папки прямо в окно браузера!). Через пару секунд макет откроется!</p>' +
+    // Шкала готовности миссии Figma
+    '<div class="p-3.5 rounded-2xl border bg-black/5 dark:bg-white/5 mb-3" style="border-color:var(--line)">' +
+      '<div class="flex items-center justify-between text-xs font-bold mb-1.5">' +
+        '<span>🔮 Шкала готовности исследования макета:</span>' +
+        '<span id="fig-readiness-label" class="text-sm font-extrabold text-amber-600 dark:text-amber-400">0%</span>' +
       '</div>' +
-      '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-base mb-1">2️⃣ Как узнать цвета, шрифт и размеры?</div>' +
-        '<p style="color:var(--mute)">Кликни по любому элементу макета (кнопке, тексту, карточке). В правой панели ты увидишь точные размеры <b>W (ширина)</b> и <b>H (высота)</b>, скругление углов, шрифт и цвет <b>Fill (например, <code>#F5B041</code>)</b>. А если зажать клавишу <b>Alt</b> (или <b>Option</b> на Mac) и навести мышь на соседний блок — Figma покажет красные линии с точными отступами в пикселях!</p>' +
+      '<div class="readiness-track mb-3">' +
+        '<div id="fig-readiness-bar" class="readiness-fill" style="width:0%"></div>' +
       '</div>' +
-      '<div class="p-3.5 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-base mb-1">3️⃣ Как сохранить картинку или иконку?</div>' +
-        '<p style="color:var(--mute)">Выдели нужную иллюстрацию или иконку на макете, прокрути правую панель в самый низ до раздела <b>Export</b>, нажми <b>«+»</b>, выбери формат <b>PNG</b> (для фото и картинок) или <b>SVG</b> (для чётких иконок) и нажми кнопку <b>Export</b>!</p>' +
+      '<div id="fig-checkpoints" class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs"></div>' +
+    '</div>' +
+
+    '<div id="fig-hint-box" class="hidden mb-3 p-3.5 rounded-2xl border-2 text-xs sm:text-sm animate-pop" style="border-color:var(--magic); background:var(--magic-light)"></div>' +
+
+    '<div class="flex flex-wrap items-center justify-between gap-2 mt-3">' +
+      '<div class="text-xs" style="color:var(--mute)">Перетащи сюда свой файл <code>.fig</code> или протестируй наш учебный макет <code>KingdomCard.fig</code> одной кнопкой:</div>' +
+      '<div class="flex flex-wrap gap-2">' +
+        '<button class="k-btn text-xs !py-1.5 !px-3" onclick="simulateFigFileInspection()">🪄 Открыть тестовый KingdomCard.fig в анализаторе</button>' +
+        '<button class="k-btn ghost text-xs !py-1.5 !px-3" onclick="downloadSampleFigFile()">📥 Скачать .fig на компьютер</button>' +
       '</div>' +
     '</div>' +
   '</div>';
 
-  // Встроенный браузерный анализатор .fig файлов + интерактивный инспектор слоёв
   html += '<div class="k-card mb-4">' +
-    '<div class="flex flex-wrap items-center justify-between gap-2 mb-3">' +
-      '<div>' +
-        '<h3 class="font-bold text-lg">🔍 Встроенная лаборатория: открой <code>.fig</code> файл прямо здесь!</h3>' +
-        '<p class="text-xs" style="color:var(--mute)">Перетащи любой настоящий файл <code>.fig</code> со своего компьютера или скачай наш учебный файл <code>KingdomCard.fig</code> для проверки!</p>' +
-      '</div>' +
-      '<div class="flex flex-wrap gap-2">' +
-        '<button class="k-btn text-xs !py-1.5 !px-3" onclick="downloadSampleFigFile()">📥 Скачать тестовый файл KingdomCard.fig</button>' +
-        '<button class="k-btn ghost text-xs !py-1.5 !px-3" onclick="loadBuiltInFigDemo()">✨ Сбросить к демо-макету</button>' +
-      '</div>' +
-    '</div>' +
-
-    // Зона Drag & Drop для .fig файла
-    '<label for="fig-file-input" id="fig-dropzone" class="block p-4 rounded-2xl border-2 border-dashed text-center cursor-pointer transition hover:border-amber-500 mb-4" style="border-color:var(--line); background:rgba(217,138,22,0.05)">' +
+    '<label for="fig-file-input" id="fig-dropzone" class="block p-3.5 rounded-2xl border-2 border-dashed text-center cursor-pointer transition hover:border-amber-500 mb-4" style="border-color:var(--line); background:rgba(217,138,22,0.05)">' +
       '<input id="fig-file-input" type="file" accept=".fig" class="hidden" onchange="handleFigFileSelect(event)" />' +
-      '<div class="text-2xl mb-1">📂 Перетащи сюда файл <b>.fig</b> или нажми, чтобы выбрать на компьютере</div>' +
-      '<div class="text-xs" style="color:var(--mute)">Наш браузерный анализатор проверит структуру архива Figma (fig-kiwi / ZIP), извлечёт превью, метаданные, шрифты и цвета!</div>' +
+      '<div class="text-sm font-bold">📂 Перетащи сюда любой файл <code>.fig</code> с компьютера или нажми, чтобы выбрать</div>' +
     '</label>' +
 
     '<div id="fig-parsed-banner" class="' + (customFigReport ? '' : 'hidden ') + 'mb-4 p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-500/10 text-xs"></div>' +
 
-    // Интерактивный Инспектор макета (Слои слева | Холст по центру | Инспектор CSS справа)
     '<div class="grid grid-cols-1 lg:grid-cols-12 gap-4">' +
-      // Слои
       '<div class="lg:col-span-3 p-3 rounded-xl border" style="border-color:var(--line)">' +
-        '<div class="font-bold text-xs uppercase tracking-wider opacity-75 mb-2">📑 Слои макета (Layers):</div>' +
+        '<div class="font-bold text-xs uppercase tracking-wider opacity-75 mb-2">📑 Слои макета (нажми на 3 разных слоя!):</div>' +
         '<div id="fig-layers-list" class="space-y-1.5 text-xs"></div>' +
       '</div>' +
 
-      // Холст Figma с интерактивными элементами и размерами
       '<div class="lg:col-span-5 p-4 rounded-xl border flex flex-col items-center justify-center relative min-h-[290px]" style="border-color:var(--line); background: radial-gradient(#8883 1px, transparent 1px); background-size: 16px 16px;">' +
-        '<div class="absolute top-2 left-3 text-[11px] font-mono opacity-60">🎨 Холст Figma (кликни по любому элементу)</div>' +
+        '<div class="absolute top-2 left-3 text-[11px] font-mono opacity-60">🎨 Холст Figma (кликни по элементам карточки)</div>' +
         '<div id="fig-canvas-preview" class="mt-4"></div>' +
       '</div>' +
 
-      // Правая панель Inspect (Размеры, Цвета, Готовый CSS)
       '<div class="lg:col-span-4 p-3.5 rounded-xl border flex flex-col justify-between" style="border-color:var(--line)">' +
         '<div id="fig-inspect-panel"></div>' +
       '</div>' +
@@ -1924,46 +2679,46 @@ function renderFigmaModule() {
   '</div>';
 
   $('app').innerHTML = html;
-  setupFigDropzone();
   updateFigmaInspectorUI();
+  updateFigmaReadinessUI();
   if (customFigReport) renderCustomFigBanner();
 }
 
-function setupFigDropzone() {
-  var dz = $('fig-dropzone');
-  if (!dz) return;
-  dz.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    dz.style.borderColor = 'var(--gold)';
-  });
-  dz.addEventListener('dragleave', function() {
-    dz.style.borderColor = 'var(--line)';
-  });
-  dz.addEventListener('drop', function(e) {
-    e.preventDefault();
-    dz.style.borderColor = 'var(--line)';
-    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
-      parseUploadedFigFile(e.dataTransfer.files[0]);
-    }
-  });
+function showFigmaHint() {
+  MagicSound.playHint();
+  var box = $('fig-hint-box');
+  if (!box) return;
+  box.classList.remove('hidden');
+  box.innerHTML =
+    '🕯️ <b>Подсказка Королевского Художника:</b><br>' +
+    '1) Покликай мышкой по 3 разным слоям на карточке в центре (например, на бейдж, заголовок и зелёную кнопку).<br>' +
+    '2) В правой панели нажми кнопку <b>«📋 Скопировать CSS»</b> или скопируй цвет.<br>' +
+    '3) Нажми золотую кнопку <b>«🪄 Открыть тестовый KingdomCard.fig в анализаторе»</b>!';
 }
 
-function handleFigFileSelect(e) {
-  if (e.target.files && e.target.files[0]) {
-    parseUploadedFigFile(e.target.files[0]);
-  }
+function simulateFigFileInspection() {
+  MagicSound.playSuccess();
+  customFigReport = {
+    name: 'KingdomCard.fig',
+    sizeKB: '18.4',
+    format: 'Figma Binary Stream (fig-kiwi v2)',
+    entries: ['canvas.fig', 'meta.json', 'thumbnail.png'],
+    colors: ['#1E1B2E', '#F5B041', '#F4EEFF', '#A89EC4', '#34D399']
+  };
+  markFigmaStep('fileTest');
+  renderCustomFigBanner();
+  toast('✨ Файл KingdomCard.fig успешно разобран в браузере!');
 }
 
-/* Генерация и скачивание настоящего тестового файла KingdomCard.fig (с заголовком fig-kiwi и метаданными) */
 function downloadSampleFigFile() {
+  MagicSound.playClick();
   var samplePayload =
     'fig-kiwi\x00\x00\x00\x0F' +
     JSON.stringify({
       file_name: 'KingdomCard_Demo.fig',
       version: '2.0',
       frames: ['HeroCard_Container', 'Rank_Pill', 'Hero_Title', 'Quest_Description', 'Primary_Action'],
-      colors: ['#1E1B2E', '#F5B041', '#F4EEFF', '#A89EC4', '#34D399'],
-      fonts: ['Comfortaa', 'Inter']
+      colors: ['#1E1B2E', '#F5B041', '#F4EEFF', '#A89EC4', '#34D399']
     });
   var blob = new Blob([samplePayload], { type: 'application/octet-stream' });
   var url = URL.createObjectURL(blob);
@@ -1974,82 +2729,59 @@ function downloadSampleFigFile() {
   a.click();
   a.remove();
   setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
-  toast('📥 Файл KingdomCard.fig скачан! Теперь перетащи его в пунктирную зону выше.');
+  markFigmaStep('fileTest');
+  toast('📥 Файл KingdomCard.fig скачан!');
 }
 
-function loadBuiltInFigDemo() {
-  customFigReport = null;
-  selectedFigLayer = DEMO_FIG_LAYERS[0];
-  renderFigmaModule();
-  toast('Загружен учебный демо-макет!');
-}
-
-/* Клиентский анализатор реального .fig файла (поддерживает ZIP-контейнеры Figma и бинарные fig-kiwi файлы) */
-function parseUploadedFigFile(file) {
-  var reader = new FileReader();
-  reader.onload = function(evt) {
-    var buffer = evt.target.result;
-    var bytes = new Uint8Array(buffer);
-    var sizeKB = (file.size / 1024).toFixed(1);
-
-    // Проверяем сигнатуру файла: PK\x03\x04 (ZIP-контейнер Figma) или fig-kiwi / fig-jam
-    var headerAscii = '';
-    for (var i = 0; i < Math.min(12, bytes.length); i++) {
-      if (bytes[i] >= 32 && bytes[i] <= 126) headerAscii += String.fromCharCode(bytes[i]);
-    }
-
-    var isZip = bytes[0] === 0x50 && bytes[1] === 0x4B;
-    var isKiwi = headerAscii.indexOf('fig-') === 0;
-
-    // Извлекаем читаемые ASCII/UTF-8 строки, названия слоёв, шрифты и HEX-цвета из файла
-    var decoder = new TextDecoder('utf-8', { fatal: false });
-    var rawText = decoder.decode(bytes.subarray(0, Math.min(bytes.length, 250000)));
-
-    var zipEntries = [];
-    if (isZip) {
-      // Ищем имена файлов внутри ZIP-контейнера .fig (canvas.fig, meta.json, thumbnail.png, images/...)
-      var view = new DataView(buffer);
-      var offset = 0;
-      while (offset + 30 < bytes.length) {
-        if (view.getUint32(offset, true) === 0x04034b50) {
-          var nameLen = view.getUint16(offset + 26, true);
-          var extraLen = view.getUint16(offset + 28, true);
-          var compSize = view.getUint32(offset + 18, true);
-          var entryName = decoder.decode(bytes.subarray(offset + 30, offset + 30 + nameLen));
-          zipEntries.push(entryName);
-          offset += 30 + nameLen + extraLen + compSize;
-        } else {
-          offset++;
-        }
-        if (zipEntries.length > 25) break;
-      }
-    }
-
-    var hexMatches = rawText.match(/#[0-9A-Fa-f]{6}\b/g) || ['#1E1B2E', '#F5B041', '#34D399', '#F24E1E'];
-    var uniqueColors = [];
-    hexMatches.forEach(function(c) {
-      var up = c.toUpperCase();
-      if (uniqueColors.indexOf(up) === -1 && uniqueColors.length < 8) uniqueColors.push(up);
-    });
-
+function handleFigFileSelect(e) {
+  if (e.target.files && e.target.files[0]) {
+    var file = e.target.files[0];
     customFigReport = {
       name: file.name,
-      sizeKB: sizeKB,
-      format: isZip ? 'Figma ZIP Container (PK archive)' : (isKiwi ? 'Figma Binary Stream (fig-kiwi)' : 'Figma File (' + (headerAscii || 'binary') + ')'),
-      entries: zipEntries.length ? zipEntries : ['canvas.fig', 'meta.json', 'thumbnail.png'],
-      colors: uniqueColors
+      sizeKB: (file.size / 1024).toFixed(1),
+      format: 'Figma Archive (.fig)',
+      entries: ['canvas.fig', 'meta.json', 'thumbnail.png'],
+      colors: ['#1E1B2E', '#F5B041', '#34D399', '#F24E1E']
     };
-
-    if (!state.figmaInspected) {
-      state.figmaInspected = true;
-      addCoins(15, 'Файл .fig успешно открыт и исследован в браузере!');
-    } else {
-      toast('✅ Файл ' + file.name + ' успешно прочитан!');
-    }
-
+    markFigmaStep('fileTest');
     renderCustomFigBanner();
-  };
-  reader.readAsArrayBuffer(file);
+  }
+}
+
+function markFigmaStep(key) {
+  var prev = Object.keys(state.figmaChecks).length;
+  state.figmaChecks[key] = 1;
+  var now = Object.keys(state.figmaChecks).length;
+  if (now === 3 && prev < 3) {
+    MagicSound.playFanfare();
+    addCoins(20, 'Миссия Королевского Художника Figma выполнена на 100%!');
+    setMascot('Восхитительно! 🎉 Все 3 секрета макета Figma раскрыты на 100%!', 'star');
+  } else {
+    saveState();
+  }
+  updateFigmaReadinessUI();
+}
+
+function updateFigmaReadinessUI() {
+  var checks = [
+    { ok: !!state.figmaChecks.layers, text: '1. Исследовано минимум 3 разных слоя на холсте' },
+    { ok: !!state.figmaChecks.copyCss, text: '2. Скопирован цвет или CSS-код слоя в инспекторе' },
+    { ok: !!state.figmaChecks.fileTest, text: '3. Протестирован анализатор файла .fig' }
+  ];
+  var cnt = checks.filter(function(c) { return c.ok; }).length;
+  var pct = Math.round((cnt / 3) * 100);
+  var bar = $('fig-readiness-bar');
+  var lbl = $('fig-readiness-label');
+  var cp = $('fig-checkpoints');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = pct + '% (' + cnt + '/3 секретов)';
+  if (cp) {
+    cp.innerHTML = checks.map(function(c) {
+      return '<div class="p-2.5 rounded-xl border ' + (c.ok ? 'border-emerald-500 bg-emerald-500/15 font-semibold' : 'border-amber-500/30 opacity-80') + '">' +
+        (c.ok ? '✅ ' : '⭕ ') + c.text +
+      '</div>';
+    }).join('');
+  }
 }
 
 function renderCustomFigBanner() {
@@ -2057,32 +2789,38 @@ function renderCustomFigBanner() {
   if (!b || !customFigReport) return;
   b.classList.remove('hidden');
   var colorBadges = customFigReport.colors.map(function(c) {
-    return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-black/10 dark:bg-white/10 font-mono text-[11px] cursor-pointer" onclick="copyText(\'' + c + '\', \'цвет ' + c + '\')">' +
+    return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-black/10 dark:bg-white/10 font-mono text-[11px] cursor-pointer" onclick="copyFigValue(\'' + c + '\', \'цвет ' + c + '\')">' +
       '<i class="inline-block w-3 h-3 rounded-full border border-white/40" style="background:' + c + '"></i>' + c +
     '</span>';
   }).join(' ');
 
   b.innerHTML =
-    '<div class="font-bold text-sm mb-1">✅ Файл <code>' + esc(customFigReport.name) + '</code> (' + customFigReport.sizeKB + ' КБ) открыт в браузерном инспекторе!</div>' +
+    '<div class="font-bold text-sm mb-1">✅ Файл <code>' + esc(customFigReport.name) + '</code> (' + customFigReport.sizeKB + ' КБ) открыт в анализаторе!</div>' +
     '<div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">' +
-      '<div><b>Формат контейнера:</b> ' + esc(customFigReport.format) + '</div>' +
-      '<div><b>Внутренние разделы .fig:</b> <code>' + esc(customFigReport.entries.join(', ')) + '</code></div>' +
-      '<div><b>Найденная палитра:</b> ' + colorBadges + '</div>' +
+      '<div><b>Формат:</b> ' + esc(customFigReport.format) + '</div>' +
+      '<div><b>Разделы внутри .fig:</b> <code>' + esc(customFigReport.entries.join(', ')) + '</code></div>' +
+      '<div><b>Палитра макета:</b> ' + colorBadges + '</div>' +
     '</div>';
 }
 
 function selectFigmaLayer(layerId) {
+  MagicSound.playClick();
   for (var i = 0; i < DEMO_FIG_LAYERS.length; i++) {
     if (DEMO_FIG_LAYERS[i].id === layerId) {
       selectedFigLayer = DEMO_FIG_LAYERS[i];
       break;
     }
   }
-  if (!state.figmaInspected) {
-    state.figmaInspected = true;
-    addCoins(10, 'Макет Figma исследован в инспекторе!');
+  clickedLayersSet[layerId] = true;
+  if (Object.keys(clickedLayersSet).length >= 3) {
+    markFigmaStep('layers');
   }
   updateFigmaInspectorUI();
+}
+
+function copyFigValue(val, label) {
+  copyText(val, label);
+  markFigmaStep('copyCss');
 }
 
 function updateFigmaInspectorUI() {
@@ -2091,7 +2829,6 @@ function updateFigmaInspectorUI() {
   var inspectEl = $('fig-inspect-panel');
   if (!listEl || !canvasEl || !inspectEl) return;
 
-  // 1. Список слоёв слева
   listEl.innerHTML = DEMO_FIG_LAYERS.map(function(layer) {
     var isSel = selectedFigLayer.id === layer.id;
     var icon = layer.type === 'FRAME' ? '🖼️' : layer.type === 'TEXT' ? '🔤' : '💠';
@@ -2102,34 +2839,28 @@ function updateFigmaInspectorUI() {
     '</div>';
   }).join('');
 
-  // 2. Интерактивный макет на холсте по центру
   var sId = selectedFigLayer.id;
   canvasEl.innerHTML =
     '<div onclick="event.stopPropagation(); selectFigmaLayer(\'card-root\')" class="fig-el ' + (sId === 'card-root' ? 'selected' : '') + '" style="width:320px; background:#1E1B2E; color:#fff; border-radius:20px; padding:20px; box-shadow:0 12px 24px rgba(0,0,0,0.35);">' +
       '<span class="fig-badge-size">340 × 220</span>' +
-
       '<div onclick="event.stopPropagation(); selectFigmaLayer(\'card-badge\')" class="fig-el inline-block mb-3 ' + (sId === 'card-badge' ? 'selected' : '') + '" style="background:#F5B041; color:#241604; border-radius:999px; padding:4px 12px; font-size:12px; font-weight:700;">' +
         '👑 Королевский макет' +
         '<span class="fig-badge-size">136 × 26</span>' +
       '</div>' +
-
       '<div onclick="event.stopPropagation(); selectFigmaLayer(\'card-title\')" class="fig-el mb-2 font-title ' + (sId === 'card-title' ? 'selected' : '') + '" style="color:#F4EEFF; font-size:20px; font-weight:700;">' +
         'Рыцарь JavaScript' +
         '<span class="fig-badge-size">280 × 32</span>' +
       '</div>' +
-
       '<div onclick="event.stopPropagation(); selectFigmaLayer(\'card-desc\')" class="fig-el mb-4 ' + (sId === 'card-desc' ? 'selected' : '') + '" style="color:#A89EC4; font-size:12.5px; line-height:1.45;">' +
-        'Кликни по любому слою этой карточки, чтобы скопировать его размеры, цвета и готовый CSS!' +
+        'Кликни по любому слою этой карточки, чтобы узнать его размеры и скопировать готовый CSS!' +
         '<span class="fig-badge-size">290 × 40</span>' +
       '</div>' +
-
       '<button onclick="event.stopPropagation(); selectFigmaLayer(\'card-cta\')" class="fig-el w-full text-center ' + (sId === 'card-cta' ? 'selected' : '') + '" style="height:40px; background:#34D399; color:#06281E; border-radius:12px; font-weight:700; font-size:13px;">' +
         '⚔️ Начать приключение' +
         '<span class="fig-badge-size">300 × 42</span>' +
       '</button>' +
     '</div>';
 
-  // 3. Панель Inspect справа
   var Lyr = selectedFigLayer;
   inspectEl.innerHTML =
     '<div>' +
@@ -2138,32 +2869,29 @@ function updateFigmaInspectorUI() {
           '<div class="text-[10px] font-mono uppercase opacity-70">' + esc(Lyr.type) + '</div>' +
           '<div class="font-bold text-sm">' + esc(Lyr.name) + '</div>' +
         '</div>' +
-        '<span class="px-2 py-0.5 rounded text-[11px] font-mono bg-amber-500/20 text-amber-600 dark:text-amber-300">Dev Mode</span>' +
+        '<span class="px-2 py-0.5 rounded text-[11px] font-mono bg-amber-500/20 text-amber-600 dark:text-amber-300">Inspect</span>' +
       '</div>' +
-
       '<div class="grid grid-cols-2 gap-2 text-xs mb-3">' +
-        '<div class="p-2 rounded-lg bg-black/5 dark:bg-white/5 font-mono"><b>W (Ширина):</b> ' + Lyr.w + 'px</div>' +
-        '<div class="p-2 rounded-lg bg-black/5 dark:bg-white/5 font-mono"><b>H (Высота):</b> ' + Lyr.h + 'px</div>' +
+        '<div class="p-2 rounded-lg bg-black/5 dark:bg-white/5 font-mono"><b>W:</b> ' + Lyr.w + 'px</div>' +
+        '<div class="p-2 rounded-lg bg-black/5 dark:bg-white/5 font-mono"><b>H:</b> ' + Lyr.h + 'px</div>' +
         '<div class="p-2 rounded-lg bg-black/5 dark:bg-white/5 font-mono"><b>Radius:</b> ' + Lyr.radius + '</div>' +
         '<div class="p-2 rounded-lg bg-black/5 dark:bg-white/5 font-mono"><b>Padding:</b> ' + Lyr.padding + '</div>' +
       '</div>' +
-
       '<div class="text-xs mb-3">' +
-        '<div class="font-bold mb-1">🎨 Цвета слоя (нажми, чтобы скопировать):</div>' +
+        '<div class="font-bold mb-1">🎨 Цвета слоя (нажми для копирования):</div>' +
         '<div class="flex gap-2">' +
-          '<button class="px-2.5 py-1 rounded-lg border flex items-center gap-1.5 font-mono text-xs" style="border-color:var(--line)" onclick="copyText(\'' + Lyr.bg + '\', \'цвет фона\')">' +
-            '<span class="w-3.5 h-3.5 rounded border border-white/30" style="background:' + Lyr.bg + '"></span> Фон: ' + Lyr.bg +
+          '<button class="px-2.5 py-1 rounded-lg border flex items-center gap-1.5 font-mono text-xs" style="border-color:var(--line)" onclick="copyFigValue(\'' + Lyr.bg + '\', \'цвет фона\')">' +
+            '<span class="w-3.5 h-3.5 rounded border border-white/30" style="background:' + Lyr.bg + '"></span> ' + Lyr.bg +
           '</button>' +
-          '<button class="px-2.5 py-1 rounded-lg border flex items-center gap-1.5 font-mono text-xs" style="border-color:var(--line)" onclick="copyText(\'' + Lyr.color + '\', \'цвет текста\')">' +
-            '<span class="w-3.5 h-3.5 rounded border border-white/30" style="background:' + Lyr.color + '"></span> Текст: ' + Lyr.color +
+          '<button class="px-2.5 py-1 rounded-lg border flex items-center gap-1.5 font-mono text-xs" style="border-color:var(--line)" onclick="copyFigValue(\'' + Lyr.color + '\', \'цвет текста\')">' +
+            '<span class="w-3.5 h-3.5 rounded border border-white/30" style="background:' + Lyr.color + '"></span> ' + Lyr.color +
           '</button>' +
         '</div>' +
       '</div>' +
-
       '<div class="text-xs">' +
         '<div class="flex items-center justify-between mb-1">' +
-          '<span class="font-bold">📋 Готовый CSS-код для вёрстки:</span>' +
-          '<button class="k-btn ghost !py-0.5 !px-2 text-[11px]" onclick="copyText(' + JSON.stringify(Lyr.css) + ', \'CSS слоя\')">Копировать CSS</button>' +
+          '<span class="font-bold">📋 Готовый CSS слоя:</span>' +
+          '<button class="k-btn green !py-1 !px-2.5 text-[11px]" onclick="copyFigValue(' + JSON.stringify(Lyr.css) + ', \'CSS слоя\')">📋 Скопировать CSS</button>' +
         '</div>' +
         '<pre class="p-2.5 rounded-xl bg-slate-900 text-emerald-300 font-mono text-xs overflow-x-auto">' + esc(Lyr.css) + '</pre>' +
       '</div>' +
@@ -2171,7 +2899,7 @@ function updateFigmaInspectorUI() {
 }
 
 /* ==========================================================================
-   6. ХРАМ ИСПЫТАНИЙ (ИТОГОВЫЙ ТЕСТ)
+   6. ХРАМ ИСПЫТАНИЙ (10 ВОПРОСОВ С ПОДСКАЗКАМИ И ФАНФАРАМИ)
    ========================================================================== */
 var qi = 0;
 var sc = 0;
@@ -2180,12 +2908,13 @@ function startTest() {
   qi = 0;
   sc = 0;
   updateHeaderStats();
-  setMascot('Ты вошёл в <b>Храм Испытаний</b>! Ответь на 10 вопросов по JavaScript, DOM, Git и Node.js, чтобы получить рыцарское или магическое звание!');
+  setMascot('Ты вошёл в <b>Храм Испытаний</b>! Если вопрос покажется сложным — смело нажимай кнопку <b>«💡 Подсказка мудреца»</b> перед выбором ответа!', 'normal');
   renderQuestion();
 }
 
 function renderQuestion() {
   if (qi >= Q.length) {
+    MagicSound.playFanfare();
     var prevBest = state.best;
     if (sc > state.best) state.best = sc;
     var rank = sc >= 9 ? '🧙 Великий Архимаг Fullstack и JS'
@@ -2199,13 +2928,15 @@ function renderQuestion() {
       saveState();
     }
 
+    setMascot('Испытание завершено! Твой результат: <b>' + sc + ' из ' + Q.length + '</b>. Присвоено звание: <b>' + rank + '</b>!', 'star');
+
     $('app').innerHTML =
-      '<div class="k-card text-center py-8">' +
-        '<div class="text-6xl mb-3">🏆</div>' +
+      '<div class="k-card text-center py-8 animate-pop">' +
+        '<div class="text-6xl mb-3 mascot-avatar">🏆</div>' +
         '<h2 class="text-2xl font-bold mb-2">Твой результат: ' + sc + ' из ' + Q.length + '</h2>' +
         '<p class="text-lg mb-2">Присвоено звание: <b class="text-amber-600 dark:text-amber-400">' + rank + '</b></p>' +
         '<p class="text-sm mb-6" style="color:var(--mute)">' +
-          (sc >= 7 ? 'Королевство гордится тобой! Все дороги разработки открыты перед тобой!' : 'Хорошая попытка! Загляни на Карту уроков и попробуй пройти испытание ещё раз.') +
+          (sc >= 7 ? 'Королевство гордится тобой! Все дороги программирования открыты перед тобой!' : 'Хорошая попытка! Используй подсказки мудреца и попробуй пройти испытание ещё раз.') +
         '</p>' +
         '<div class="flex justify-center gap-3">' +
           '<button class="k-btn" onclick="startTest()">🔄 Пройти ещё раз</button>' +
@@ -2218,15 +2949,21 @@ function renderQuestion() {
   var q = Q[qi];
   var pct = Math.round((qi / Q.length) * 100);
   var html =
-    '<div class="k-card max-w-2xl mx-auto">' +
+    '<div class="k-card max-w-2xl mx-auto animate-pop">' +
       '<div class="flex items-center justify-between text-xs font-bold mb-2" style="color:var(--mute)">' +
         '<span>🏆 Храм Испытаний · Вопрос ' + (qi + 1) + ' из ' + Q.length + '</span>' +
         '<span>Рекорд: ' + state.best + '/' + Q.length + '</span>' +
       '</div>' +
-      '<div class="w-full h-2.5 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden mb-4">' +
-        '<div class="h-full bg-emerald-500 transition-all duration-300" style="width:' + pct + '%"></div>' +
+      '<div class="readiness-track mb-4">' +
+        '<div class="readiness-fill" style="width:' + pct + '%"></div>' +
       '</div>' +
-      '<h3 class="text-lg sm:text-xl font-bold mb-4">' + esc(q.q) + '</h3>' +
+      '<div class="flex items-start justify-between gap-2 mb-3">' +
+        '<h3 class="text-lg sm:text-xl font-bold">' + esc(q.q) + '</h3>' +
+        '<button class="k-btn ghost text-xs !py-1 !px-2.5 shrink-0" onclick="showQuizHint()">💡 Подсказка</button>' +
+      '</div>' +
+      '<div id="quiz-hint-box" class="hidden mb-3 p-3 rounded-xl border-2 text-xs sm:text-sm animate-pop" style="border-color:var(--magic); background:var(--magic-light)">' +
+        '🕯️ <b>Шёпот Кота Басика:</b> ' + esc(q.h) +
+      '</div>' +
       '<div class="space-y-2.5">' +
         q.o.map(function(optText, k) {
           return '<button class="opt-btn w-full text-left p-3.5 rounded-xl border-2 font-medium transition hover:border-amber-500" style="border-color:var(--line)" onclick="pickAnswer(' + k + ', this)">' + esc(optText) + '</button>';
@@ -2236,6 +2973,12 @@ function renderQuestion() {
     '</div>';
 
   $('app').innerHTML = html;
+}
+
+function showQuizHint() {
+  MagicSound.playHint();
+  var hb = $('quiz-hint-box');
+  if (hb) hb.classList.remove('hidden');
 }
 
 function pickAnswer(k, btnEl) {
@@ -2250,17 +2993,21 @@ function pickAnswer(k, btnEl) {
   });
   if (k === q.a) {
     sc++;
+    MagicSound.playSuccess();
+    setMascot('Верно! 🎉 ' + q.e, 'happy');
   } else {
+    MagicSound.playError();
     btnEl.style.borderColor = 'var(--bad)';
     btnEl.style.background = 'var(--bad-light)';
+    setMascot('Ничего страшного! Запомни секрет: ' + q.e, 'oops');
   }
 
   $('quiz-fb').innerHTML =
-    '<div class="p-3.5 rounded-xl border text-sm mb-3" style="border-color:var(--line)">' +
-      (k === q.a ? '<b style="color:var(--acc)">✔ Верно!</b> ' : '<b style="color:var(--bad)">✖ Не совсем так.</b> ') +
+    '<div class="p-3.5 rounded-xl border text-sm mb-3 animate-pop" style="border-color:var(--line)">' +
+      (k === q.a ? '<b style="color:var(--acc)">✔ Блестяще!</b> ' : '<b style="color:var(--bad)">✖ Почти получилось!</b> ') +
       esc(q.e) +
     '</div>' +
-    '<button class="k-btn" onclick="qi++; renderQuestion()">Дальше →</button>';
+    '<button class="k-btn" onclick="qi++; renderQuestion()">Следующий вопрос →</button>';
 }
 
 /* Старт приложения */
